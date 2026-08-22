@@ -1,0 +1,11 @@
+[Unit]
+Description=Daily verified Loupe data backup to delta
+
+[Timer]
+OnCalendar=*-*-* 05:20:00 UTC
+Persistent=true
+RandomizedDelaySec=10m
+Unit=loupe-data-backup.service
+
+[Install]
+WantedBy=timers.target

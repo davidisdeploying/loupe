@@ -1,0 +1,12 @@
+# Python dependencies for the photo metadata ingest.
+# System binaries required separately (NOT pip): exiftool, ffprobe (ffmpeg).
+#   sudo apt install libimage-exiftool-perl ffmpeg
+#
+# Install these with:
+#   pip install --break-system-packages --user -r requirements.txt
+
+Pillow>=10.0           # image reading (JPG/PNG; HEIC via pillow-heif)
+pillow-heif>=0.16      # HEIC/HEIF decode support for Pillow
+imagehash>=4.3         # perceptual hash (pHash) and difference hash (dHash)
+opencv-python-headless>=4.9  # Laplacian variance for blur/sharpness scoring
+numpy>=1.26            # array backend for imagehash/opencv

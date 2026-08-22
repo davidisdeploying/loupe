@@ -1,0 +1,15 @@
+[Unit]
+Description=Blind A/B aesthetic preference tool (standalone, experiment)
+# Relocated from delta 2026-08-07 with Loupe; now lives inside the Loupe repo
+# at ~/loupe/aesthetic. Pure stdlib — the 1.3 GB training venv was NOT moved and
+# is only needed by the train/extract/export scripts, not by this server.
+
+[Service]
+Type=simple
+ExecStart=/data/loupe-venv/bin/python %h/loupe/aesthetic/preftool/server.py
+WorkingDirectory=%h/loupe/aesthetic/preftool
+Restart=on-failure
+KillMode=control-group
+
+[Install]
+WantedBy=default.target

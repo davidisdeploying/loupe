@@ -1,0 +1,27 @@
+[Unit]
+Description=loupe — merged photo-cull app (:8000)
+# Reads only local files at startup (metadata.db, candidate CSVs); no NAS/network
+# dependency to bind. The public origin is edge (Alpha's Cloudflare tunnel),
+# which reaches this host over Tailscale at 100.64.0.35:8000.
+# Runs under /data/loupe-venv (Python 3.12) — matches the previous Delta
+# interpreter version and supplies the in-process ML stack (insightface, nudenet,
+# onnxruntime-CUDA, cv2) that Delta's system python never had.
+# Survive transient crashes but stop flapping if it's hard-broken:
+StartLimitIntervalSec=300
+StartLimitBurst=10
+
+[Service]
+Type=simple
+WorkingDirectory=%h/loupe
+Environment=PYTHONUNBUFFERED=1
+Environment=DATA_ROOT=/data/loupe/state
+Environment=LOUPE_PIPELINE_DIR=%h/loupe/pipeline
+EnvironmentFile=-%h/loupe/secrets.env
+ExecStart=/data/loupe-venv/bin/python %h/loupe/server.py
+Restart=always
+RestartSec=3
+StandardOutput=append:/data/loupe/state/logs/server.log
+StandardError=append:/data/loupe/state/logs/server.log
+
+[Install]
+WantedBy=default.target

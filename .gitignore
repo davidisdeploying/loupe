@@ -1,0 +1,95 @@
+# ── Secrets / credentials — NEVER track ────────────────────────────────────
+secrets.env
+*.env
+*.key
+*.pem
+*.token
+credentials*
+
+# ── Personal config (real residences / protected-people names) ─────────────
+loupe-settings.json
+
+# ── iCloud auth session cookie (Connect 2a) — NEVER track ──────────────────
+icloud-session/
+
+# ── Runtime data stores (decisions, vault, pairs, summaries, faces, enrichment)
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+
+# ── Caches / logs / editor backups ─────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+*.log
+logs/
+cache/
+enrich-import-staging/
+*.bak
+*.bak-*
+*.bak*
+
+# ── Virtualenvs & model weights (large, reproducible) ──────────────────────
+.faces-venv/
+.venv/
+venv/
+.insightface/
+
+# ── Originals / media (never track; originals live on the NAS) ─────────────
+*.heic
+*.heif
+*.jpg
+*.jpeg
+*.png
+# favicon raster set — derived from static/favicon.svg, committed so a fresh clone
+# renders correctly with no build step (avoids a cairosvg/Cairo dependency at setup)
+!static/icons/*.png
+*.mov
+*.mp4
+*.m4v
+*.gif
+*.tiff
+
+# Superseded / archived code bundles
+*.tgz
+
+# Generated work-list artifacts (contain real media paths / GPS / filenames — regenerated
+# by triage_and_repull.py / quarantine_probe.py; kept on disk, never published)
+*.csv
+icloud-repull-list.md
+quarantine-unreadable-videos.md
+vault/
+run-status/
+graphify-out/
+# Agent working dir (Claude Code) — local only, never publish
+.claude/
+
+# Stage5 embeddings feature — model weights / query venv / export dir (large, reproducible)
+stage5/models/
+.stage5-query-venv/
+video-faces-export/
+
+# Forensic snapshot retained from the 2026-07-09 orphan-row cleanup. 36MB SQLite holding
+# 65,700 assets rows from the retired ~/loupe/metadata.db (that DB is gone; its orphaned
+# -shm/-wal remain). Deliberately NOT deleted: ~130 rows carry values the live
+# ~/loupe-pipeline/metadata.db lacks (104 processing_errors + scattered EXIF/GPS/dimensions),
+# and 6,666 rows disagree on is_live_photo_still/is_live_photo_video. Live is otherwise the
+# better copy. Full analysis: homelab-vault/sessions/2026-08-03-delta-wifi-syncthing-rescan-heartbeat-churn.md
+archive-pre-delete/
+
+# aesthetic/ — blind A/B aesthetic-preference experiment, relocated from
+# delta:~/aesthetic 2026-08-07. Source is tracked; the heavy and runtime
+# artifacts are not. pairs.npz alone is 202 MB, over GitHub's 100 MB file limit.
+aesthetic/venv/
+aesthetic/**/__pycache__/
+aesthetic/pairs.npz
+aesthetic/split.npz
+aesthetic/preferences.db
+aesthetic/preferences.db-shm
+aesthetic/preferences.db-wal
+aesthetic/aesthetic_head.pt
+aesthetic/aesthetic_head.onnx.data
+aesthetic/eyeball/*.html
+aesthetic/zeroshot/*.html

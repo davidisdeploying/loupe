@@ -1,0 +1,1430 @@
+{
+  "generated_utc": "2026-07-14 11:30 UTC",
+  "model_version": "siglip2-so400m-mlp-v1-20260714",
+  "total_embeddings": 61970,
+  "overlap_n": 45737,
+  "unscored_n": 16233,
+  "histogram": [
+    {
+      "range": "0.0-0.1",
+      "count": 6974
+    },
+    {
+      "range": "0.1-0.2",
+      "count": 4243
+    },
+    {
+      "range": "0.2-0.3",
+      "count": 5815
+    },
+    {
+      "range": "0.3-0.4",
+      "count": 10214
+    },
+    {
+      "range": "0.4-0.5",
+      "count": 15648
+    },
+    {
+      "range": "0.5-0.6",
+      "count": 11452
+    },
+    {
+      "range": "0.6-0.7",
+      "count": 5323
+    },
+    {
+      "range": "0.7-0.8",
+      "count": 1682
+    },
+    {
+      "range": "0.8-0.9",
+      "count": 560
+    },
+    {
+      "range": "0.9-1.0",
+      "count": 59
+    }
+  ],
+  "in_sample_spearman": 0.9202899297368663,
+  "in_sample_spearman_p": 0.0,
+  "missing_thumb_report": {
+    "a_head_top_40": 1,
+    "b_apple_top_40": 6,
+    "c_head_loves_apple_meh": 6,
+    "d_apple_loves_head_meh": 9,
+    "e_head_top_40_unscored": 0
+  },
+  "sets": {
+    "a_head_top_40": [
+      {
+        "id": 75862,
+        "filename": "PHOTO_0058.JPG",
+        "head": 0.980910062789917,
+        "apple": null
+      },
+      {
+        "id": 85906,
+        "filename": "PHOTO_0064.JPG",
+        "head": 0.9648831486701965,
+        "apple": null
+      },
+      {
+        "id": 75387,
+        "filename": "PHOTO_0046.JPG",
+        "head": 0.9630641341209412,
+        "apple": null
+      },
+      {
+        "id": 75860,
+        "filename": "PHOTO_0056.JPG",
+        "head": 0.960228443145752,
+        "apple": null
+      },
+      {
+        "id": 75853,
+        "filename": "PHOTO_0052.JPG",
+        "head": 0.9601009488105774,
+        "apple": null
+      },
+      {
+        "id": 77416,
+        "filename": "PHOTO_0059.JPG",
+        "head": 0.9575186967849731,
+        "apple": null
+      },
+      {
+        "id": 75857,
+        "filename": "PHOTO_0055.JPG",
+        "head": 0.9570416212081909,
+        "apple": null
+      },
+      {
+        "id": 72980,
+        "filename": "PHOTO_0031.JPG",
+        "head": 0.957024097442627,
+        "apple": 0.984375
+      },
+      {
+        "id": 72870,
+        "filename": "PHOTO_0028.JPG",
+        "head": 0.9545519351959229,
+        "apple": 1.0
+      },
+      {
+        "id": 75855,
+        "filename": "PHOTO_0053.JPG",
+        "head": 0.953765869140625,
+        "apple": null
+      },
+      {
+        "id": 72995,
+        "filename": "PHOTO_0033.JPG",
+        "head": 0.9537525773048401,
+        "apple": 1.0
+      },
+      {
+        "id": 19814,
+        "filename": "PHOTO_0075.JPG",
+        "head": 0.9531681537628174,
+        "apple": null
+      },
+      {
+        "id": 75852,
+        "filename": "PHOTO_0050.JPG",
+        "head": 0.9530458450317383,
+        "apple": null
+      },
+      {
+        "id": 70891,
+        "filename": "PHOTO_0025.JPG",
+        "head": 0.9513447284698486,
+        "apple": null
+      },
+      {
+        "id": 75859,
+        "filename": "PHOTO_0057.JPG",
+        "head": 0.9509939551353455,
+        "apple": null
+      },
+      {
+        "id": 75848,
+        "filename": "PHOTO_0048.JPG",
+        "head": 0.9499672651290894,
+        "apple": null
+      },
+      {
+        "id": 75850,
+        "filename": "PHOTO_0049.JPG",
+        "head": 0.9487821459770203,
+        "apple": null
+      },
+      {
+        "id": 20303,
+        "filename": "PHOTO_0078.JPG",
+        "head": 0.9457167983055115,
+        "apple": null
+      },
+      {
+        "id": 74401,
+        "filename": "PHOTO_0036.JPG",
+        "head": 0.9436655044555664,
+        "apple": 1.0
+      },
+      {
+        "id": 63880,
+        "filename": "PHOTO_0107.JPG",
+        "head": 0.9429452419281006,
+        "apple": null
+      },
+      {
+        "id": 19809,
+        "filename": "PHOTO_0074.JPG",
+        "head": 0.942604660987854,
+        "apple": null
+      },
+      {
+        "id": 20499,
+        "filename": "PHOTO_0084.JPG",
+        "head": 0.9424597024917603,
+        "apple": null
+      },
+      {
+        "id": 105080,
+        "filename": "PHOTO_0103.WEBP",
+        "head": 0.9408666491508484,
+        "apple": 0.980957
+      },
+      {
+        "id": 77417,
+        "filename": "PHOTO_0060.JPG",
+        "head": 0.9408151507377625,
+        "apple": null
+      },
+      {
+        "id": 72957,
+        "filename": "PHOTO_0029.JPG",
+        "head": 0.9400081634521484,
+        "apple": 0.968262
+      },
+      {
+        "id": 74404,
+        "filename": "PHOTO_0037.JPG",
+        "head": 0.9372402429580688,
+        "apple": 0.848145
+      },
+      {
+        "id": 19810,
+        "filename": "PHOTO_0073.JPG",
+        "head": 0.9370673894882202,
+        "apple": null
+      },
+      {
+        "id": 74398,
+        "filename": "PHOTO_0035.JPG",
+        "head": 0.9366636276245117,
+        "apple": 0.914551
+      },
+      {
+        "id": 63881,
+        "filename": "PHOTO_0108.JPG",
+        "head": 0.9338656663894653,
+        "apple": null
+      },
+      {
+        "id": 75384,
+        "filename": "PHOTO_0045.JPG",
+        "head": 0.9310436844825745,
+        "apple": null
+      },
+      {
+        "id": 48877,
+        "filename": "PHOTO_0019.JPG",
+        "head": 0.9277151823043823,
+        "apple": 0.89502
+      },
+      {
+        "id": 74469,
+        "filename": "PHOTO_0042.JPG",
+        "head": 0.9271703958511353,
+        "apple": 1.0
+      },
+      {
+        "id": 74437,
+        "filename": "PHOTO_0040.JPG",
+        "head": 0.9266848564147949,
+        "apple": 0.796387
+      },
+      {
+        "id": 60010,
+        "filename": "PHOTO_0163.JPG",
+        "head": 0.9231120944023132,
+        "apple": 0.9375
+      },
+      {
+        "id": 46461,
+        "filename": "PHOTO_0018.JPG",
+        "head": 0.9223251938819885,
+        "apple": 0.919922
+      },
+      {
+        "id": 44616,
+        "filename": "PHOTO_0013.JPG",
+        "head": 0.9207576513290405,
+        "apple": 0.78125
+      },
+      {
+        "id": 72813,
+        "filename": "PHOTO_0027.JPG",
+        "head": 0.9195635318756104,
+        "apple": 0.92041
+      },
+      {
+        "id": 72811,
+        "filename": "PHOTO_0026.JPG",
+        "head": 0.918480634689331,
+        "apple": 0.932129
+      },
+      {
+        "id": 44618,
+        "filename": "PHOTO_0014.JPG",
+        "head": 0.9176682233810425,
+        "apple": 0.887207
+      },
+      {
+        "id": 75854,
+        "filename": "PHOTO_0054.JPG",
+        "head": 0.9176124930381775,
+        "apple": null
+      }
+    ],
+    "b_apple_top_40": [
+      {
+        "id": 44623,
+        "filename": "PHOTO_0016.JPG",
+        "head": 0.8728083372116089,
+        "apple": 1.0
+      },
+      {
+        "id": 72870,
+        "filename": "PHOTO_0028.JPG",
+        "head": 0.9545519351959229,
+        "apple": 1.0
+      },
+      {
+        "id": 72995,
+        "filename": "PHOTO_0033.JPG",
+        "head": 0.9537525773048401,
+        "apple": 1.0
+      },
+      {
+        "id": 74401,
+        "filename": "PHOTO_0036.JPG",
+        "head": 0.9436655044555664,
+        "apple": 1.0
+      },
+      {
+        "id": 74469,
+        "filename": "PHOTO_0042.JPG",
+        "head": 0.9271703958511353,
+        "apple": 1.0
+      },
+      {
+        "id": 72980,
+        "filename": "PHOTO_0031.JPG",
+        "head": 0.957024097442627,
+        "apple": 0.984375
+      },
+      {
+        "id": 105080,
+        "filename": "PHOTO_0103.WEBP",
+        "head": 0.9408666491508484,
+        "apple": 0.980957
+      },
+      {
+        "id": 72957,
+        "filename": "PHOTO_0029.JPG",
+        "head": 0.9400081634521484,
+        "apple": 0.968262
+      },
+      {
+        "id": 84992,
+        "filename": "PHOTO_0149.HEIC",
+        "head": 0.8166612386703491,
+        "apple": 0.967285
+      },
+      {
+        "id": 57615,
+        "filename": "PHOTO_0135.JPG",
+        "head": 0.7230478525161743,
+        "apple": 0.96582
+      },
+      {
+        "id": 44615,
+        "filename": "PHOTO_0012.JPG",
+        "head": 0.8783860206604004,
+        "apple": 0.965332
+      },
+      {
+        "id": 74434,
+        "filename": "PHOTO_0039.JPG",
+        "head": 0.8954125642776489,
+        "apple": 0.960449
+      },
+      {
+        "id": 48968,
+        "filename": "PHOTO_0021.JPG",
+        "head": 0.9100742340087891,
+        "apple": 0.958984
+      },
+      {
+        "id": 72982,
+        "filename": "PHOTO_0032.JPG",
+        "head": 0.899239182472229,
+        "apple": 0.956543
+      },
+      {
+        "id": 43078,
+        "filename": "PHOTO_0161.JPG",
+        "head": 0.8752620220184326,
+        "apple": 0.956055
+      },
+      {
+        "id": 57845,
+        "filename": "PHOTO_0141.JPG",
+        "head": 0.8390550017356873,
+        "apple": 0.955566
+      },
+      {
+        "id": 57641,
+        "filename": "PHOTO_0137.JPG",
+        "head": 0.8479846715927124,
+        "apple": 0.952148
+      },
+      {
+        "id": 87023,
+        "filename": "PHOTO_0156.HEIC",
+        "head": 0.45075830817222595,
+        "apple": 0.95166
+      },
+      {
+        "id": 71604,
+        "filename": "PHOTO_0115.PNG",
+        "head": 0.867821216583252,
+        "apple": 0.94873
+      },
+      {
+        "id": 19579,
+        "filename": "PHOTO_0001.JPG",
+        "head": 0.8961061239242554,
+        "apple": 0.946777
+      },
+      {
+        "id": 57823,
+        "filename": "PHOTO_0140.JPG",
+        "head": 0.897575855255127,
+        "apple": 0.944824
+      },
+      {
+        "id": 77454,
+        "filename": "PHOTO_0126.PNG",
+        "head": 0.887078046798706,
+        "apple": 0.939941
+      },
+      {
+        "id": 74431,
+        "filename": "PHOTO_0038.JPG",
+        "head": 0.9131171703338623,
+        "apple": 0.937988
+      },
+      {
+        "id": 60010,
+        "filename": "PHOTO_0163.JPG",
+        "head": 0.9231120944023132,
+        "apple": 0.9375
+      },
+      {
+        "id": 74472,
+        "filename": "PHOTO_0043.JPG",
+        "head": 0.8904902935028076,
+        "apple": 0.937012
+      },
+      {
+        "id": 48934,
+        "filename": "PHOTO_0020.JPG",
+        "head": 0.8087623119354248,
+        "apple": 0.933105
+      },
+      {
+        "id": 72811,
+        "filename": "PHOTO_0026.JPG",
+        "head": 0.918480634689331,
+        "apple": 0.932129
+      },
+      {
+        "id": 74474,
+        "filename": "PHOTO_0044.JPG",
+        "head": 0.8961693048477173,
+        "apple": 0.931152
+      },
+      {
+        "id": 77191,
+        "filename": "PHOTO_0121.HEIC",
+        "head": 0.8694103956222534,
+        "apple": 0.927734
+      },
+      {
+        "id": 57738,
+        "filename": "PHOTO_0138.JPG",
+        "head": 0.8336277604103088,
+        "apple": 0.925781
+      },
+      {
+        "id": 74393,
+        "filename": "PHOTO_0034.JPG",
+        "head": 0.8829836249351501,
+        "apple": 0.923828
+      },
+      {
+        "id": 44622,
+        "filename": "PHOTO_0015.JPG",
+        "head": 0.8783209323883057,
+        "apple": 0.922363
+      },
+      {
+        "id": 72813,
+        "filename": "PHOTO_0027.JPG",
+        "head": 0.9195635318756104,
+        "apple": 0.92041
+      },
+      {
+        "id": 74452,
+        "filename": "PHOTO_0041.JPG",
+        "head": 0.9046013355255127,
+        "apple": 0.92041
+      },
+      {
+        "id": 46461,
+        "filename": "PHOTO_0018.JPG",
+        "head": 0.9223251938819885,
+        "apple": 0.919922
+      },
+      {
+        "id": 88138,
+        "filename": "PHOTO_0158.HEIC",
+        "head": 0.8005540370941162,
+        "apple": 0.919434
+      },
+      {
+        "id": 72963,
+        "filename": "PHOTO_0030.JPG",
+        "head": 0.897736668586731,
+        "apple": 0.917969
+      },
+      {
+        "id": 49172,
+        "filename": "PHOTO_0023.JPG",
+        "head": 0.7101995348930359,
+        "apple": 0.916016
+      },
+      {
+        "id": 74398,
+        "filename": "PHOTO_0035.JPG",
+        "head": 0.9366636276245117,
+        "apple": 0.914551
+      },
+      {
+        "id": 46324,
+        "filename": "PHOTO_0154.HEIC",
+        "head": 0.9029309749603271,
+        "apple": 0.912598
+      }
+    ],
+    "c_head_loves_apple_meh": [
+      {
+        "id": 36503,
+        "filename": "PHOTO_0100.JPG",
+        "head": 0.5800501704216003,
+        "apple": 0.094116,
+        "pred_pct": 0.8597166345985657,
+        "apple_pct": 0.11844061570753892
+      },
+      {
+        "id": 63723,
+        "filename": "PHOTO_0109.JPG",
+        "head": 0.5152541995048523,
+        "apple": 0.0,
+        "pred_pct": 0.755269372048277,
+        "apple_pct": 0.06021514780479272
+      },
+      {
+        "id": 48037,
+        "filename": "PHOTO_0114.JPG",
+        "head": 0.5007960200309753,
+        "apple": 0.0,
+        "pred_pct": 0.7282447087633375,
+        "apple_pct": 0.03992478572677978
+      },
+      {
+        "id": 36505,
+        "filename": "PHOTO_0101.JPG",
+        "head": 0.6105040907859802,
+        "apple": 0.229492,
+        "pred_pct": 0.8976736050376072,
+        "apple_pct": 0.22802606262025538
+      },
+      {
+        "id": 81315,
+        "filename": "PHOTO_0096.PNG",
+        "head": 0.586706280708313,
+        "apple": 0.234863,
+        "pred_pct": 0.8693370648941753,
+        "apple_pct": 0.23458544691271646
+      },
+      {
+        "id": 64497,
+        "filename": "PHOTO_0119.JPG",
+        "head": 0.6055989265441895,
+        "apple": 0.264648,
+        "pred_pct": 0.8915952422599266,
+        "apple_pct": 0.26917526674829456
+      },
+      {
+        "id": 67311,
+        "filename": "PHOTO_0143.JPG",
+        "head": 0.6721805334091187,
+        "apple": 0.318115,
+        "pred_pct": 0.9493834178765087,
+        "apple_pct": 0.3448705614832954
+      },
+      {
+        "id": 68921,
+        "filename": "PHOTO_0153.JPG",
+        "head": 0.5273445248603821,
+        "apple": 0.181885,
+        "pred_pct": 0.7770683925135561,
+        "apple_pct": 0.18342224943152002
+      },
+      {
+        "id": 68894,
+        "filename": "PHOTO_0151.JPG",
+        "head": 0.5823934078216553,
+        "apple": 0.268799,
+        "pred_pct": 0.862974462130488,
+        "apple_pct": 0.27446650341087986
+      },
+      {
+        "id": 104856,
+        "filename": "PHOTO_0131.HEIC",
+        "head": 0.5930011868476868,
+        "apple": 0.28418,
+        "pred_pct": 0.8764649291586496,
+        "apple_pct": 0.29528161623228966
+      },
+      {
+        "id": 46459,
+        "filename": "PHOTO_0017.JPG",
+        "head": 0.636795163154602,
+        "apple": 0.322998,
+        "pred_pct": 0.9233645268497463,
+        "apple_pct": 0.3524794472625503
+      },
+      {
+        "id": 57857,
+        "filename": "PHOTO_0142.JPG",
+        "head": 0.7706353664398193,
+        "apple": 0.358643,
+        "pred_pct": 0.9846073115270246,
+        "apple_pct": 0.4184449886304006
+      },
+      {
+        "id": 37408,
+        "filename": "PHOTO_0117.PNG",
+        "head": 0.545074462890625,
+        "apple": 0.24292,
+        "pred_pct": 0.8068917264299458,
+        "apple_pct": 0.24341875109323072
+      },
+      {
+        "id": 26179,
+        "filename": "PHOTO_0006.JPG",
+        "head": 0.6542233824729919,
+        "apple": 0.341797,
+        "pred_pct": 0.9375546615357705,
+        "apple_pct": 0.384992128738849
+      },
+      {
+        "id": 49123,
+        "filename": "PHOTO_0022.JPG",
+        "head": 0.622901201248169,
+        "apple": 0.328857,
+        "pred_pct": 0.9102676228791324,
+        "apple_pct": 0.36177190834353684
+      },
+      {
+        "id": 73816,
+        "filename": "PHOTO_0144.HEIC",
+        "head": 0.6888503432273865,
+        "apple": 0.356934,
+        "pred_pct": 0.9581292635997901,
+        "apple_pct": 0.4147935980409306
+      },
+      {
+        "id": 84428,
+        "filename": "PHOTO_0145.PNG",
+        "head": 0.49677354097366333,
+        "apple": 0.176025,
+        "pred_pct": 0.719717509183138,
+        "apple_pct": 0.17793423124016092
+      },
+      {
+        "id": 82063,
+        "filename": "PHOTO_0123.HEIC",
+        "head": 0.47094491124153137,
+        "apple": 0.112488,
+        "pred_pct": 0.6627164596816513,
+        "apple_pct": 0.13090344586321498
+      },
+      {
+        "id": 79707,
+        "filename": "PHOTO_0098.HEIC",
+        "head": 0.6085799932479858,
+        "apple": 0.331055,
+        "pred_pct": 0.8952903620780129,
+        "apple_pct": 0.36542329893300685
+      },
+      {
+        "id": 13684,
+        "filename": "PHOTO_0093.JPG",
+        "head": 0.4739323556423187,
+        "apple": 0.134644,
+        "pred_pct": 0.6696475424173518,
+        "apple_pct": 0.14642732202203954
+      },
+      {
+        "id": 52991,
+        "filename": "PHOTO_0134.HEIC",
+        "head": 0.4798434376716614,
+        "apple": 0.154663,
+        "pred_pct": 0.6831598740598216,
+        "apple_pct": 0.1612733951373098
+      },
+      {
+        "id": 82060,
+        "filename": "PHOTO_0122.HEIC",
+        "head": 0.6021418571472168,
+        "apple": 0.331787,
+        "pred_pct": 0.8873753716984433,
+        "apple_pct": 0.3670631450061221
+      },
+      {
+        "id": 84988,
+        "filename": "PHOTO_0148.HEIC",
+        "head": 0.6859691143035889,
+        "apple": 0.368408,
+        "pred_pct": 0.9564894175266748,
+        "apple_pct": 0.4378170369074689
+      },
+      {
+        "id": 105009,
+        "filename": "PHOTO_0009.CR2",
+        "head": 0.4992554485797882,
+        "apple": 0.209106,
+        "pred_pct": 0.7250524750743397,
+        "apple_pct": 0.20716722057022915
+      },
+      {
+        "id": 13686,
+        "filename": "PHOTO_0094.JPG",
+        "head": 0.48757094144821167,
+        "apple": 0.182495,
+        "pred_pct": 0.7007827531922337,
+        "apple_pct": 0.18390327094630052
+      },
+      {
+        "id": 13933,
+        "filename": "PHOTO_0099.JPG",
+        "head": 0.57673180103302,
+        "apple": 0.317871,
+        "pred_pct": 0.8550813363652265,
+        "apple_pct": 0.3445644568829806
+      },
+      {
+        "id": 52970,
+        "filename": "PHOTO_0133.HEIC",
+        "head": 0.6620685458183289,
+        "apple": 0.368896,
+        "pred_pct": 0.9428896274269722,
+        "apple_pct": 0.43904145530872835
+      },
+      {
+        "id": 102374,
+        "filename": "PHOTO_0118.HEIC",
+        "head": 0.5764252543449402,
+        "apple": 0.324463,
+        "pred_pct": 0.8547533671506035,
+        "apple_pct": 0.3549064194507609
+      },
+      {
+        "id": 88151,
+        "filename": "PHOTO_0160.HEIC",
+        "head": 0.5591047406196594,
+        "apple": 0.309082,
+        "pred_pct": 0.8298058422249431,
+        "apple_pct": 0.331292635997901
+      },
+      {
+        "id": 100152,
+        "filename": "PHOTO_0128.HEIC",
+        "head": 0.45848140120506287,
+        "apple": 0.120605,
+        "pred_pct": 0.633702116494665,
+        "apple_pct": 0.13663197481196432
+      },
+      {
+        "id": 46273,
+        "filename": "PHOTO_0150.HEIC",
+        "head": 0.5584080219268799,
+        "apple": 0.310303,
+        "pred_pct": 0.8286688822809166,
+        "apple_pct": 0.3329543466853245
+      },
+      {
+        "id": 77267,
+        "filename": "PHOTO_0125.JPG",
+        "head": 0.48295581340789795,
+        "apple": 0.197876,
+        "pred_pct": 0.6906375721532272,
+        "apple_pct": 0.19750306104600315
+      },
+      {
+        "id": 60482,
+        "filename": "PHOTO_0091.HEIC",
+        "head": 0.5363295674324036,
+        "apple": 0.288574,
+        "pred_pct": 0.7928765086583872,
+        "apple_pct": 0.30195032359629176
+      },
+      {
+        "id": 2242,
+        "filename": "PHOTO_0066.JPG",
+        "head": 0.539868175983429,
+        "apple": 0.292969,
+        "pred_pct": 0.7984957145355956,
+        "apple_pct": 0.3078537694595067
+      },
+      {
+        "id": 45311,
+        "filename": "PHOTO_0065.PNG",
+        "head": 0.5902789831161499,
+        "apple": 0.34375,
+        "pred_pct": 0.8738411754416652,
+        "apple_pct": 0.38886216547140107
+      },
+      {
+        "id": 57381,
+        "filename": "PHOTO_0007.HEIC",
+        "head": 0.49034470319747925,
+        "apple": 0.223267,
+        "pred_pct": 0.7066424698268322,
+        "apple_pct": 0.22196956445688298
+      },
+      {
+        "id": 73656,
+        "filename": "PHOTO_0136.JPG",
+        "head": 0.47004234790802,
+        "apple": 0.174561,
+        "pred_pct": 0.6608361028511457,
+        "apple_pct": 0.17692845898198356
+      },
+      {
+        "id": 68911,
+        "filename": "PHOTO_0152.JPG",
+        "head": 0.5426112413406372,
+        "apple": 0.302734,
+        "pred_pct": 0.8027593143256953,
+        "apple_pct": 0.3210818611159699
+      },
+      {
+        "id": 62644,
+        "filename": "PHOTO_0097.HEIC",
+        "head": 0.5136005878448486,
+        "apple": 0.268555,
+        "pred_pct": 0.7520990029735876,
+        "apple_pct": 0.27387615882455835
+      },
+      {
+        "id": 16948,
+        "filename": "PHOTO_0004.JPG",
+        "head": 0.5778282880783081,
+        "apple": 0.338135,
+        "pred_pct": 0.8566555885954171,
+        "apple_pct": 0.3786076613608536
+      }
+    ],
+    "d_apple_loves_head_meh": [
+      {
+        "id": 37635,
+        "filename": "PHOTO_0164.JPG",
+        "head": 0.10516902804374695,
+        "apple": 0.651367,
+        "pred_pct": 0.12624628301556762,
+        "apple_pct": 0.940615707538919
+      },
+      {
+        "id": 32434,
+        "filename": "PHOTO_0159.PNG",
+        "head": 0.10876384377479553,
+        "apple": 0.61377,
+        "pred_pct": 0.12913241210425047,
+        "apple_pct": 0.908496589120168
+      },
+      {
+        "id": 84831,
+        "filename": "PHOTO_0146.HEIC",
+        "head": 0.19999921321868896,
+        "apple": 0.633301,
+        "pred_pct": 0.20248819310827357,
+        "apple_pct": 0.9268628651390589
+      },
+      {
+        "id": 84095,
+        "filename": "PHOTO_0139.HEIC",
+        "head": 0.2389032542705536,
+        "apple": 0.654785,
+        "pred_pct": 0.2391332866888228,
+        "apple_pct": 0.9428896274269722
+      },
+      {
+        "id": 80562,
+        "filename": "PHOTO_0104.PNG",
+        "head": 0.08516159653663635,
+        "apple": 0.529297,
+        "pred_pct": 0.11021952072765437,
+        "apple_pct": 0.7903620780129439
+      },
+      {
+        "id": 85908,
+        "filename": "PHOTO_0082.PNG",
+        "head": 0.19554579257965088,
+        "apple": 0.569824,
+        "pred_pct": 0.1991866363477348,
+        "apple_pct": 0.855671680951548
+      },
+      {
+        "id": 6743,
+        "filename": "PHOTO_0102.JPG",
+        "head": 0.2953670024871826,
+        "apple": 0.654785,
+        "pred_pct": 0.3068261325870212,
+        "apple_pct": 0.9427803043554311
+      },
+      {
+        "id": 73229,
+        "filename": "PHOTO_0130.PNG",
+        "head": 0.22145375609397888,
+        "apple": 0.570312,
+        "pred_pct": 0.22240685674304705,
+        "apple_pct": 0.8563494839951024
+      },
+      {
+        "id": 90603,
+        "filename": "PHOTO_0112.HEIC",
+        "head": 0.25675565004348755,
+        "apple": 0.589844,
+        "pred_pct": 0.2584397411229666,
+        "apple_pct": 0.8815593842924611
+      },
+      {
+        "id": 16554,
+        "filename": "PHOTO_0003.GIF",
+        "head": 0.20984774827957153,
+        "apple": 0.551758,
+        "pred_pct": 0.21114658037432218,
+        "apple_pct": 0.8272476823508833
+      },
+      {
+        "id": 64524,
+        "filename": "PHOTO_0120.HEIC",
+        "head": 0.20721501111984253,
+        "apple": 0.548828,
+        "pred_pct": 0.20885079587196081,
+        "apple_pct": 0.822918488717859
+      },
+      {
+        "id": 34222,
+        "filename": "PHOTO_0085.PNG",
+        "head": 0.09576573967933655,
+        "apple": 0.499512,
+        "pred_pct": 0.11929333566555886,
+        "apple_pct": 0.7320054224243484
+      },
+      {
+        "id": 9209,
+        "filename": "PHOTO_0086.JPG",
+        "head": 0.24925097823143005,
+        "apple": 0.569824,
+        "pred_pct": 0.24971576001399334,
+        "apple_pct": 0.8555186286513906
+      },
+      {
+        "id": 1807,
+        "filename": "PHOTO_0002.JPG",
+        "head": 0.3169500231742859,
+        "apple": 0.654297,
+        "pred_pct": 0.33772083260451286,
+        "apple_pct": 0.9426709812838902
+      },
+      {
+        "id": 88665,
+        "filename": "PHOTO_0092.PNG",
+        "head": 0.21124064922332764,
+        "apple": 0.543945,
+        "pred_pct": 0.21252405107573902,
+        "apple_pct": 0.8154626552387616
+      },
+      {
+        "id": 90595,
+        "filename": "PHOTO_0111.HEIC",
+        "head": 0.2235860526561737,
+        "apple": 0.550293,
+        "pred_pct": 0.22435280741647717,
+        "apple_pct": 0.8249081686199056
+      },
+      {
+        "id": 90805,
+        "filename": "PHOTO_0116.HEIC",
+        "head": 0.3447023630142212,
+        "apple": 0.707031,
+        "pred_pct": 0.3827182088507959,
+        "apple_pct": 0.9714010844848697
+      },
+      {
+        "id": 90523,
+        "filename": "PHOTO_0110.HEIC",
+        "head": 0.14280784130096436,
+        "apple": 0.505371,
+        "pred_pct": 0.1565943676753542,
+        "apple_pct": 0.7430907818786077
+      },
+      {
+        "id": 870,
+        "filename": "PHOTO_0162.JPG",
+        "head": 0.3394708037376404,
+        "apple": 0.679688,
+        "pred_pct": 0.3743003323421375,
+        "apple_pct": 0.9582823158999475
+      },
+      {
+        "id": 4913,
+        "filename": "PHOTO_0113.JPG",
+        "head": 0.20605528354644775,
+        "apple": 0.526367,
+        "pred_pct": 0.20773570054224244,
+        "apple_pct": 0.7841962567780304
+      },
+      {
+        "id": 12300,
+        "filename": "PHOTO_0127.JPG",
+        "head": 0.30096888542175293,
+        "apple": 0.594238,
+        "pred_pct": 0.3151346860241385,
+        "apple_pct": 0.8874846947699843
+      },
+      {
+        "id": 8156,
+        "filename": "PHOTO_0089.JPG",
+        "head": 0.3399549126625061,
+        "apple": 0.654785,
+        "pred_pct": 0.3750437292286164,
+        "apple_pct": 0.9429333566555886
+      },
+      {
+        "id": 88625,
+        "filename": "PHOTO_0090.PNG",
+        "head": 0.08532705903053284,
+        "apple": 0.465088,
+        "pred_pct": 0.1103725730278118,
+        "apple_pct": 0.6570535245758264
+      },
+      {
+        "id": 53062,
+        "filename": "PHOTO_0147.HEIC",
+        "head": 0.2667735517024994,
+        "apple": 0.540527,
+        "pred_pct": 0.2693720482770684,
+        "apple_pct": 0.8104775231764911
+      },
+      {
+        "id": 83789,
+        "filename": "PHOTO_0132.PNG",
+        "head": 0.29041627049446106,
+        "apple": 0.558105,
+        "pred_pct": 0.2994577575651565,
+        "apple_pct": 0.8372616757040405
+      },
+      {
+        "id": 17175,
+        "filename": "PHOTO_0005.JPG",
+        "head": 0.28506654500961304,
+        "apple": 0.553223,
+        "pred_pct": 0.29287650865838727,
+        "apple_pct": 0.8292373622529299
+      },
+      {
+        "id": 61886,
+        "filename": "PHOTO_0083.HEIC",
+        "head": 0.2411593794822693,
+        "apple": 0.522461,
+        "pred_pct": 0.24136347734825958,
+        "apple_pct": 0.7777024663284939
+      },
+      {
+        "id": 30531,
+        "filename": "PHOTO_0157.JPG",
+        "head": 0.2870469093322754,
+        "apple": 0.554199,
+        "pred_pct": 0.29521602238936506,
+        "apple_pct": 0.8307022914115795
+      },
+      {
+        "id": 6381,
+        "filename": "PHOTO_0095.JPG",
+        "head": 0.25739824771881104,
+        "apple": 0.53125,
+        "pred_pct": 0.2590300857092881,
+        "apple_pct": 0.7933138009445513
+      },
+      {
+        "id": 8154,
+        "filename": "PHOTO_0088.JPG",
+        "head": 0.3271903395652771,
+        "apple": 0.595215,
+        "pred_pct": 0.3544035333216722,
+        "apple_pct": 0.8881187685849221
+      },
+      {
+        "id": 2141,
+        "filename": "PHOTO_0070.JPG",
+        "head": 0.29800450801849365,
+        "apple": 0.5625,
+        "pred_pct": 0.3106087108623404,
+        "apple_pct": 0.844280216896974
+      },
+      {
+        "id": 82752,
+        "filename": "PHOTO_0165.HEIC",
+        "head": 0.1210864782333374,
+        "apple": 0.47168,
+        "pred_pct": 0.13864351932831906,
+        "apple_pct": 0.6719870561483295
+      },
+      {
+        "id": 52568,
+        "filename": "PHOTO_0129.HEIC",
+        "head": 0.379665732383728,
+        "apple": 0.74707,
+        "pred_pct": 0.45100139933531574,
+        "apple_pct": 0.9840388315550114
+      },
+      {
+        "id": 52430,
+        "filename": "PHOTO_0124.HEIC",
+        "head": 0.3122722804546356,
+        "apple": 0.572266,
+        "pred_pct": 0.33094280216896976,
+        "apple_pct": 0.8584922161973063
+      },
+      {
+        "id": 86871,
+        "filename": "PHOTO_0155.PNG",
+        "head": 0.2865029275417328,
+        "apple": 0.54541,
+        "pred_pct": 0.29458194857442715,
+        "apple_pct": 0.818195732027287
+      },
+      {
+        "id": 78263,
+        "filename": "PHOTO_0010.JPG",
+        "head": 0.16600856184959412,
+        "apple": 0.48291,
+        "pred_pct": 0.17447962217946475,
+        "apple_pct": 0.6974156025887703
+      },
+      {
+        "id": 89891,
+        "filename": "PHOTO_0008.JPG",
+        "head": 0.386873722076416,
+        "apple": 0.770996,
+        "pred_pct": 0.4659130662935106,
+        "apple_pct": 0.9884773482595767
+      },
+      {
+        "id": 1195,
+        "filename": "PHOTO_0067.JPG",
+        "head": 0.10354682803153992,
+        "apple": 0.459473,
+        "pred_pct": 0.12475948924260977,
+        "apple_pct": 0.6448967990204653
+      },
+      {
+        "id": 78265,
+        "filename": "PHOTO_0011.JPG",
+        "head": 0.2859068214893341,
+        "apple": 0.542969,
+        "pred_pct": 0.29392601014518105,
+        "apple_pct": 0.8138009445513381
+      },
+      {
+        "id": 19981,
+        "filename": "PHOTO_0069.HEIC",
+        "head": 0.1811787188053131,
+        "apple": 0.487305,
+        "pred_pct": 0.18665821234913416,
+        "apple_pct": 0.7059865313975862
+      }
+    ],
+    "e_head_top_40_unscored": [
+      {
+        "id": 75862,
+        "filename": "PHOTO_0058.JPG",
+        "head": 0.980910062789917,
+        "apple": null
+      },
+      {
+        "id": 85906,
+        "filename": "PHOTO_0064.JPG",
+        "head": 0.9648831486701965,
+        "apple": null
+      },
+      {
+        "id": 75387,
+        "filename": "PHOTO_0046.JPG",
+        "head": 0.9630641341209412,
+        "apple": null
+      },
+      {
+        "id": 75860,
+        "filename": "PHOTO_0056.JPG",
+        "head": 0.960228443145752,
+        "apple": null
+      },
+      {
+        "id": 75853,
+        "filename": "PHOTO_0052.JPG",
+        "head": 0.9601009488105774,
+        "apple": null
+      },
+      {
+        "id": 77416,
+        "filename": "PHOTO_0059.JPG",
+        "head": 0.9575186967849731,
+        "apple": null
+      },
+      {
+        "id": 75857,
+        "filename": "PHOTO_0055.JPG",
+        "head": 0.9570416212081909,
+        "apple": null
+      },
+      {
+        "id": 75855,
+        "filename": "PHOTO_0053.JPG",
+        "head": 0.953765869140625,
+        "apple": null
+      },
+      {
+        "id": 19814,
+        "filename": "PHOTO_0075.JPG",
+        "head": 0.9531681537628174,
+        "apple": null
+      },
+      {
+        "id": 75852,
+        "filename": "PHOTO_0050.JPG",
+        "head": 0.9530458450317383,
+        "apple": null
+      },
+      {
+        "id": 70891,
+        "filename": "PHOTO_0025.JPG",
+        "head": 0.9513447284698486,
+        "apple": null
+      },
+      {
+        "id": 75859,
+        "filename": "PHOTO_0057.JPG",
+        "head": 0.9509939551353455,
+        "apple": null
+      },
+      {
+        "id": 75848,
+        "filename": "PHOTO_0048.JPG",
+        "head": 0.9499672651290894,
+        "apple": null
+      },
+      {
+        "id": 75850,
+        "filename": "PHOTO_0049.JPG",
+        "head": 0.9487821459770203,
+        "apple": null
+      },
+      {
+        "id": 20303,
+        "filename": "PHOTO_0078.JPG",
+        "head": 0.9457167983055115,
+        "apple": null
+      },
+      {
+        "id": 63880,
+        "filename": "PHOTO_0107.JPG",
+        "head": 0.9429452419281006,
+        "apple": null
+      },
+      {
+        "id": 19809,
+        "filename": "PHOTO_0074.JPG",
+        "head": 0.942604660987854,
+        "apple": null
+      },
+      {
+        "id": 20499,
+        "filename": "PHOTO_0084.JPG",
+        "head": 0.9424597024917603,
+        "apple": null
+      },
+      {
+        "id": 77417,
+        "filename": "PHOTO_0060.JPG",
+        "head": 0.9408151507377625,
+        "apple": null
+      },
+      {
+        "id": 19810,
+        "filename": "PHOTO_0073.JPG",
+        "head": 0.9370673894882202,
+        "apple": null
+      },
+      {
+        "id": 63881,
+        "filename": "PHOTO_0108.JPG",
+        "head": 0.9338656663894653,
+        "apple": null
+      },
+      {
+        "id": 75384,
+        "filename": "PHOTO_0045.JPG",
+        "head": 0.9310436844825745,
+        "apple": null
+      },
+      {
+        "id": 75854,
+        "filename": "PHOTO_0054.JPG",
+        "head": 0.9176124930381775,
+        "apple": null
+      },
+      {
+        "id": 20700,
+        "filename": "PHOTO_0087.JPG",
+        "head": 0.9170002341270447,
+        "apple": null
+      },
+      {
+        "id": 20310,
+        "filename": "PHOTO_0080.JPG",
+        "head": 0.9122739434242249,
+        "apple": null
+      },
+      {
+        "id": 19780,
+        "filename": "PHOTO_0068.JPG",
+        "head": 0.9107037782669067,
+        "apple": null
+      },
+      {
+        "id": 20311,
+        "filename": "PHOTO_0081.JPG",
+        "head": 0.9087249636650085,
+        "apple": null
+      },
+      {
+        "id": 77418,
+        "filename": "PHOTO_0061.JPG",
+        "head": 0.9083537459373474,
+        "apple": null
+      },
+      {
+        "id": 69856,
+        "filename": "PHOTO_0024.JPG",
+        "head": 0.9072738289833069,
+        "apple": null
+      },
+      {
+        "id": 19808,
+        "filename": "PHOTO_0072.JPG",
+        "head": 0.9067968130111694,
+        "apple": null
+      },
+      {
+        "id": 78818,
+        "filename": "PHOTO_0063.JPG",
+        "head": 0.9066696166992188,
+        "apple": null
+      },
+      {
+        "id": 20298,
+        "filename": "PHOTO_0076.JPG",
+        "head": 0.9050096869468689,
+        "apple": null
+      },
+      {
+        "id": 75851,
+        "filename": "PHOTO_0051.JPG",
+        "head": 0.9025353193283081,
+        "apple": null
+      },
+      {
+        "id": 63879,
+        "filename": "PHOTO_0106.JPG",
+        "head": 0.9007899761199951,
+        "apple": null
+      },
+      {
+        "id": 20301,
+        "filename": "PHOTO_0077.JPG",
+        "head": 0.8983162641525269,
+        "apple": null
+      },
+      {
+        "id": 77423,
+        "filename": "PHOTO_0062.JPG",
+        "head": 0.8949338793754578,
+        "apple": null
+      },
+      {
+        "id": 19805,
+        "filename": "PHOTO_0071.JPG",
+        "head": 0.8945792317390442,
+        "apple": null
+      },
+      {
+        "id": 20302,
+        "filename": "PHOTO_0079.JPG",
+        "head": 0.8902894258499146,
+        "apple": null
+      },
+      {
+        "id": 63866,
+        "filename": "PHOTO_0105.JPG",
+        "head": 0.887677788734436,
+        "apple": null
+      },
+      {
+        "id": 75388,
+        "filename": "PHOTO_0047.JPG",
+        "head": 0.8872771263122559,
+        "apple": null
+      }
+    ]
+  }
+}

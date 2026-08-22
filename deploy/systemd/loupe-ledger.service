@@ -1,0 +1,10 @@
+[Unit]
+Description=Loupe sidecar ledger snapshot to NAS
+
+[Service]
+Type=oneshot
+Environment=LOUPE_STATE_DIR=/data/loupe/state
+ExecStart=%h/loupe/tools/ledger_snapshot.sh
+IOSchedulingClass=idle
+Nice=10
+TimeoutStartSec=1800

@@ -1,0 +1,17 @@
+[Unit]
+Description=Verified snapshot of Loupe derived SQLite state, mirrored off-host to delta
+
+[Service]
+Type=oneshot
+Environment=PYTHONDONTWRITEBYTECODE=1
+Environment=LOUPE_STATE_DIR=/data/loupe/state
+ExecStart=/usr/bin/python3 %h/loupe/deploy/loupe_data_backup.py --root %h/FleetDatabaseBackups/charlie-snapshots --keep-days 7
+ExecStartPost=/usr/bin/python3 %h/.local/bin/control_plane_offhost_sync.py --source-root %h/FleetDatabaseBackups/charlie-snapshots --target-host delta --target-root %h/FleetDatabaseBackups/charlie-snapshots
+NoNewPrivileges=true
+# PrivateTmp deliberately NOT set. Under Ubuntu 26.04's systemd its mount
+# namespace makes ssh reject /etc/ssh/ssh_config.d/20-systemd-ssh-proxy.conf
+# with "Bad owner or permissions" (rc=255), which breaks the off-host sync.
+# Isolated 2026-08-07: no options and NoNewPrivileges both work; PrivateTmp
+# alone reproduces it. Alpha runs the same script WITH PrivateTmp and is fine
+# (Debian 13), so this is host-specific. The backup script creates its temp dir
+# inside the snapshot root rather than /tmp, so PrivateTmp buys nothing here.

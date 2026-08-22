@@ -1,0 +1,148 @@
+{
+  "apple-enrichment.db": {
+    "objects": {
+      "index": {
+        "idx_au_uuid": "CREATE INDEX idx_au_uuid ON asset_uuid(uuid)",
+        "idx_lbl_asset": "CREATE INDEX idx_lbl_asset ON labels(asset_id)",
+        "idx_lbl_term": "CREATE INDEX idx_lbl_term ON labels(term)",
+        "idx_p_asset": "CREATE INDEX idx_p_asset ON persons(asset_id)",
+        "idx_p_person": "CREATE INDEX idx_p_person ON persons(person)"
+      },
+      "table": {
+        "apple_score": "CREATE TABLE apple_score(asset_id INTEGER PRIMARY KEY, overall REAL)",
+        "asset_uuid": "CREATE TABLE asset_uuid(asset_id INTEGER PRIMARY KEY, uuid TEXT NOT NULL, match_method TEXT, confidence REAL, cloud_guid TEXT, fingerprint TEXT)",
+        "labels": "CREATE TABLE labels(asset_id INTEGER, category TEXT, term TEXT, score REAL)",
+        "persons": "CREATE TABLE persons(asset_id INTEGER, person TEXT)",
+        "provenance": "CREATE TABLE provenance(k TEXT PRIMARY KEY, v TEXT)"
+      }
+    },
+    "sha256": "a90b2cb63c353b0942b8e25d7813ef2d063903dec07deb47654bed00a6edf9b1"
+  },
+  "clusters.db": {
+    "objects": {
+      "index": {
+        "idx_cf_cluster": "CREATE INDEX idx_cf_cluster ON cluster_faces(cluster_id)"
+      },
+      "table": {
+        "cluster_faces": "CREATE TABLE cluster_faces( face_id INTEGER PRIMARY KEY, cluster_id INTEGER NOT NULL, cos_to_centroid REAL NOT NULL)",
+        "cluster_meta": "CREATE TABLE cluster_meta(key TEXT PRIMARY KEY, value TEXT)",
+        "clusters": "CREATE TABLE clusters( cluster_id INTEGER PRIMARY KEY, size INTEGER NOT NULL, /* faces */ n_assets INTEGER NOT NULL, /* distinct assets */ n_days INTEGER NOT NULL, /* distinct capture days */ first_day TEXT, /* ISO date, display only */ last_day TEXT, centroid BLOB NOT NULL, /* float32 x 512, L2-normalized */ rep_face_ids TEXT NOT NULL, /* JSON [face_id,...] by cos desc */ claimed_person_id INTEGER, /* set by /api/person/create */ updated_at INTEGER NOT NULL, dismissed INTEGER)"
+      }
+    },
+    "sha256": "7dd4d036f3bc9366c8c610cdb75b59ab2e9311470e4b05767388118fb50116b5"
+  },
+  "decisions.db": {
+    "objects": {
+      "index": {
+        "idx_bucket": "CREATE INDEX idx_bucket ON decisions(bucket)"
+      },
+      "table": {
+        "decisions": "CREATE TABLE decisions( id INTEGER PRIMARY KEY, state TEXT NOT NULL CHECK(state IN ('keep','cut')), bucket TEXT, updated_at INTEGER NOT NULL)"
+      }
+    },
+    "sha256": "2f3c0e8b5d81c5a2fe49f53852e4eaa6012affc70cb36bea0ab4fe6f482c7e4e"
+  },
+  "edits.db": {
+    "objects": {
+      "index": {
+        "idx_members_group": "CREATE INDEX idx_members_group ON variant_members(group_id)"
+      },
+      "table": {
+        "variant_groups": "CREATE TABLE variant_groups( group_id INTEGER PRIMARY KEY AUTOINCREMENT, created_at INTEGER NOT NULL, source TEXT NOT NULL, notes TEXT )",
+        "variant_members": "CREATE TABLE variant_members( asset_id INTEGER PRIMARY KEY, group_id INTEGER NOT NULL, role TEXT NOT NULL CHECK(role IN ('original','edit','unknown')), edit_type TEXT, confidence REAL, role_confidence REAL, method TEXT NOT NULL, created_at INTEGER NOT NULL )"
+      }
+    },
+    "sha256": "f16ebabec5ff9e0f45a883cf486aeae88690b44d3bfe5c8bf55ed8e6bdf4d538"
+  },
+  "faces.db": {
+    "objects": {
+      "index": {
+        "idx_assign_person": "CREATE INDEX idx_assign_person ON assignments(person_id)",
+        "idx_faces_asset": "CREATE INDEX idx_faces_asset ON faces(asset_id)"
+      },
+      "table": {
+        "assignments": "CREATE TABLE assignments( face_id INTEGER PRIMARY KEY, person_id INTEGER NOT NULL, source TEXT, /* 'manual' | 'propagated' | 'apple' */ confidence REAL, confirmed INTEGER DEFAULT 0, updated_at INTEGER NOT NULL)",
+        "faces": "CREATE TABLE faces( face_id INTEGER PRIMARY KEY AUTOINCREMENT, asset_id INTEGER NOT NULL, bbox_json TEXT, det_score REAL, embedding BLOB, /* float32 x 512 */ created_at INTEGER NOT NULL, embed_model TEXT, embed_det INTEGER, embed_provider TEXT, embed_run TEXT)",
+        "persons": "CREATE TABLE persons( person_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE, is_protected INTEGER DEFAULT 0, source TEXT, created_at INTEGER NOT NULL, is_pet INTEGER DEFAULT 0)",
+        "processed": "CREATE TABLE processed( asset_id INTEGER PRIMARY KEY, n_faces INTEGER NOT NULL, processed_at INTEGER NOT NULL)",
+        "rejections": "CREATE TABLE rejections( person_id INTEGER NOT NULL, face_id INTEGER NOT NULL, updated_at INTEGER NOT NULL, PRIMARY KEY(person_id, face_id))"
+      }
+    },
+    "sha256": "e87202958e94c4cf9568adc349916403d9ab92038c0809e687121df354220b6e"
+  },
+  "metadata.db": {
+    "objects": {
+      "index": {
+        "idx_capture_timestamp": "CREATE INDEX idx_capture_timestamp ON assets(capture_timestamp)",
+        "idx_gps": "CREATE INDEX idx_gps ON assets(gps_lat, gps_lon)",
+        "idx_live_still": "CREATE INDEX idx_live_still ON assets(is_live_photo_still)",
+        "idx_live_video": "CREATE INDEX idx_live_video ON assets(is_live_photo_video)",
+        "idx_month": "CREATE INDEX idx_month ON assets(month)",
+        "idx_phash": "CREATE INDEX idx_phash ON assets(phash)",
+        "idx_sha256": "CREATE INDEX idx_sha256 ON assets(file_sha256)",
+        "idx_shared_album": "CREATE INDEX idx_shared_album ON assets(is_shared_album)",
+        "idx_year": "CREATE INDEX idx_year ON assets(year)",
+        "idx_year_month": "CREATE INDEX idx_year_month ON assets(year, month)"
+      },
+      "table": {
+        "assets": "CREATE TABLE assets ( id INTEGER PRIMARY KEY AUTOINCREMENT, filepath TEXT UNIQUE NOT NULL, filename TEXT, file_size_bytes INTEGER, file_mtime INTEGER, file_sha256 TEXT, -- deferred (content hashing iteration) mime_type TEXT, extension TEXT, year INTEGER, month INTEGER, -- EXIF / metadata capture_timestamp INTEGER, gps_lat REAL, gps_lon REAL, camera_make TEXT, camera_model TEXT, lens_model TEXT, iso INTEGER, shutter_speed REAL, -- exposure time in seconds aperture REAL, -- f-number width_pixels INTEGER, height_pixels INTEGER, orientation INTEGER, -- Live Photo / shared album detection is_live_photo_still INTEGER, -- deferred (pairing iteration) is_live_photo_video INTEGER, -- deferred live_photo_partner_id INTEGER, -- deferred is_shared_album INTEGER, -- Quality / similarity phash TEXT, -- deferred (hashing iteration) dhash TEXT, -- deferred blur_laplacian REAL, -- deferred -- Video-specific duration_seconds REAL, -- deferred (video iteration) -- Processing tracking processed_at INTEGER, processing_errors TEXT )"
+      }
+    },
+    "sha256": "8c738581770b66521da466d0326e22fcc264ca628edcac40de225a518b65b1f6"
+  },
+  "nsfw.db": {
+    "objects": {
+      "table": {
+        "processed": "CREATE TABLE processed( asset_id INTEGER PRIMARY KEY, processed_at INTEGER NOT NULL)",
+        "scores": "CREATE TABLE scores( asset_id INTEGER PRIMARY KEY, max_score REAL, top_class TEXT)"
+      }
+    },
+    "sha256": "a0f15c153b32cc672b110556e2734642b357a451d2e5b065d36c2938bd372aee"
+  },
+  "pairs.db": {
+    "objects": {
+      "table": {
+        "live_pairs": "CREATE TABLE live_pairs( still_asset_id INTEGER PRIMARY KEY, mov_asset_id INTEGER UNIQUE, method TEXT, confidence REAL, built_at INTEGER)"
+      }
+    },
+    "sha256": "2123b21bef54e71e2cd9f67443466d66b1119a59b2faadd4559049009577c950"
+  },
+  "renders.db": {
+    "objects": {
+      "table": {
+        "renders": "CREATE TABLE renders( asset_id INTEGER PRIMARY KEY, render_path TEXT NOT NULL, uuid TEXT, render_bytes INTEGER, built_at INTEGER)"
+      }
+    },
+    "sha256": "85fb5484d3477c29dadddc3208b4363f63370a3a4cf659e6080c71159b55f15d"
+  },
+  "stage5/embeddings_siglip2.db": {
+    "objects": {
+      "table": {
+        "processed": "CREATE TABLE processed ( asset_id INTEGER PRIMARY KEY, status TEXT NOT NULL, error TEXT, ts REAL )",
+        "vec_images": "CREATE VIRTUAL TABLE vec_images USING vec0( asset_id INTEGER PRIMARY KEY, embedding FLOAT[1152] )",
+        "vec_images_chunks": "CREATE TABLE \"vec_images_chunks\"(chunk_id INTEGER PRIMARY KEY AUTOINCREMENT,size INTEGER NOT NULL,validity BLOB NOT NULL,rowids BLOB NOT NULL)",
+        "vec_images_info": "CREATE TABLE \"vec_images_info\" (key text primary key, value any)",
+        "vec_images_rowids": "CREATE TABLE \"vec_images_rowids\"(rowid INTEGER PRIMARY KEY AUTOINCREMENT,id,chunk_id INTEGER,chunk_offset INTEGER)",
+        "vec_images_vector_chunks00": "CREATE TABLE \"vec_images_vector_chunks00\"(rowid PRIMARY KEY,vectors BLOB NOT NULL)"
+      }
+    },
+    "sha256": "b936a279856e3d84cc19834e2068630e290b16c45c83f0c8bb4f679b80708dd0"
+  },
+  "summaries.db": {
+    "objects": {
+      "table": {
+        "clusters": "CREATE TABLE clusters( cluster_key TEXT PRIMARY KEY, lat REAL, lon REAL, venue TEXT, generated_at INTEGER, venue_lat REAL, venue_lon REAL)",
+        "summaries": "CREATE TABLE summaries( period_key TEXT PRIMARY KEY, facts_json TEXT, venues_json TEXT, prose TEXT, generated_at INTEGER)"
+      }
+    },
+    "sha256": "0e1c6fa3bbe9ada808d70ef89e1ff70ccfd68318378f76e7e403e9d34da7f59c"
+  },
+  "vault.db": {
+    "objects": {
+      "table": {
+        "vault": "CREATE TABLE vault(asset_id INTEGER PRIMARY KEY, marked_at INTEGER NOT NULL, note TEXT)"
+      }
+    },
+    "sha256": "b9e34b052851e1c68fbca92d95ecc315281b72d0ce5fbe359dbe28b0fff6966c"
+  }
+}

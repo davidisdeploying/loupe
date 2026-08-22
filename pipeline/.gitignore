@@ -1,0 +1,70 @@
+# loupe-pipeline — SOURCE ONLY. This repo tracks pipeline scripts, never data.
+# Strict by design: when in doubt, ignore it. Source is staged explicitly.
+
+# ---- databases & their WAL/SHM/backup sidecars (never track) ----
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+*.bak
+*.bak-*
+*.bak.*
+*.db.bak-*
+backups/
+snapshots/
+
+# ---- derived data / decision lists / state ----
+*.csv
+*.json
+*.parquet
+
+# ---- logs & python caches ----
+*.log
+logs/
+__pycache__/
+*.pyc
+*.pyo
+
+# ---- thumbnail / contactsheet / sample caches & archives ----
+culling/contactsheets/
+culling/samples/
+culling/_archive/
+
+# ---- vendored tools & virtualenvs (large, reproducible) ----
+vendor/
+.venv/
+venv/
+.faces-venv/
+*.egg-info/
+
+# ---- secrets / credentials / local config ----
+secrets.env
+*.env
+.env
+*.key
+*.pem
+*.token
+credentials*
+.claude/
+
+# ---- originals / media (never track; originals live on the NAS) ----
+originals/
+*.heic
+*.heif
+*.jpg
+*.jpeg
+*.png
+*.mov
+*.mp4
+*.m4v
+*.gif
+*.tiff
+*.tif
+*.dng
+*.cr2
+*.cr3
+*.arw
+*.nef
+*.webp
+graphify-out/

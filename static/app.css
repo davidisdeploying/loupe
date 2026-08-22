@@ -1,0 +1,2084 @@
+
+:root{--bg:#15110d;--bg2:#1d1812;--panel:#241d15;--line:#3A3024;--ink:#E9E4D6;--mut:#9c8b76;
+ --amber:#BA7517;--green:#639922;--keep:#639922;--cut:#B0463E;
+ --hd:'Fraunces',Georgia,serif;--bd:'Newsreader',Georgia,serif;--mo:'JetBrains Mono',ui-monospace,monospace;
+ --gbar-h:64px;--rail-w:0px}   /* persistent global header height; JS overwrites with the measured #top.offsetHeight */
+/* --line and --ink were #3a2e22 / #ece2d3 here until 2026-08-09 (P8 token foundation).
+   html.loupe-glass below redefines both, and app.html -- the only file that loads this
+   stylesheet -- always carries that class, so the old :root values could never render.
+   They were dead code that made the same token name mean two different colours depending
+   on which block you happened to read. Aligned, not deleted: :root stays the readable
+   definition point. tests/test_css_tokens.py fails if a token is ever shadowed with a
+   differing value again. */
+/* P9 / audit 8.5 — the three spaces. The IA groups by TASK, not by data:
+   Light table = "what do I have?", Loupe = "what stays?", Darkroom = "run the lab".
+   Chrome carries no chroma (8.2), so the group labels are neutral ramp only, and
+   all-small-caps per the label treatment in 8.3. The separator is a hairline, not a
+   box -- the table is matte and must not compete with a photograph. */
+.navspace{display:flex;align-items:center;gap:6px;padding-left:10px;position:relative}
+.navspace + .navspace{margin-left:4px}
+.navspace + .navspace::before{content:"";position:absolute;left:0;top:50%;transform:translateY(-50%);
+  width:1px;height:20px;background:var(--line)}
+.navspace-l{font-family:var(--mo);font-size:9px;letter-spacing:.08em;
+  font-variant-caps:all-small-caps;text-transform:lowercase;color:var(--faint);
+  white-space:nowrap;padding-right:2px;user-select:none}
+@media (max-width:720px){
+  .navspace{padding-left:0;flex-wrap:wrap;justify-content:center}
+  .navspace + .navspace::before{display:none}
+  .navspace-l{width:100%;text-align:center;padding:2px 0 0}
+}
+/* Keyboard map (audit 8.5, published via '?'). Chrome carries no chroma (8.2): neutral
+   ramp only. Mono + all-small-caps section labels per 8.3; numbers and keycaps are the
+   personality of a dense app. z-index 55 puts it above every space overlay -- it is
+   reference material you summon over whatever you were doing -- and it is registered in
+   OVL so Escape and any navigation dismiss it through the one chokepoint. */
+#keysview{position:fixed;inset:0;z-index:55;background:#0009;display:none;
+  align-items:center;justify-content:center;padding:24px}
+#keysview.on{display:flex}
+.keysbox{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+  max-width:560px;width:100%;max-height:80dvh;overflow-y:auto;padding:18px 20px 14px;
+  box-shadow:0 12px 34px rgba(0,0,0,.5)}
+.keyshead{display:flex;align-items:baseline;justify-content:space-between;
+  border-bottom:1px solid var(--line);padding-bottom:9px;margin-bottom:12px}
+.keystitle{font-family:var(--hd);font-size:16px;color:var(--ink)}
+.keysx{background:none;border:1px solid var(--line);border-radius:6px;color:var(--mut);
+  font-family:var(--mo);font-size:10px;padding:3px 7px;cursor:pointer}
+.keysx:hover{color:var(--ink);border-color:var(--mut)}
+.keysgrid{display:flex;flex-direction:column;gap:2px}
+.keysec{font-family:var(--mo);font-size:9px;letter-spacing:.08em;
+  font-variant-caps:all-small-caps;color:var(--faint);margin:10px 0 4px}
+.keysec:first-child{margin-top:0}
+.keysgrid dl{display:flex;align-items:baseline;gap:10px;margin:0;padding:3px 0}
+.keysgrid dt{flex:0 0 92px;display:flex;gap:4px}
+.keysgrid dd{margin:0;color:var(--mut);font-size:13px}
+.keysgrid kbd{font-family:var(--mo);font-size:11px;color:var(--ink);background:var(--bg2);
+  border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;
+  padding:2px 6px;min-width:20px;text-align:center;font-variant-numeric:tabular-nums}
+.keysown{font-family:var(--mo);font-size:9px;font-variant-caps:all-small-caps;
+  color:var(--faint);border:1px solid var(--line);border-radius:3px;padding:0 4px;margin-left:6px}
+.keysnote{color:var(--faint);font-size:12px;line-height:1.5;margin:14px 0 0;
+  border-top:1px solid var(--line);padding-top:10px;text-wrap:pretty}
+
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--bd)}
+a{color:var(--amber)}
+header#top{position:fixed;top:0;left:0;right:0;z-index:48;background:linear-gradient(#1d1812,#15110d);border-bottom:1px solid var(--line);padding:7px 28px 8px;display:flex;flex-direction:column;gap:6px}
+.crumb{font-family:var(--hd);font-size:16px;display:flex;gap:5px;align-items:center;flex-wrap:wrap;line-height:1}
+.crumb a,.crumb .cur{display:inline-flex;align-items:baseline;gap:6px;padding:4px 10px;border-radius:8px;text-decoration:none;white-space:nowrap}
+.crumb a{cursor:pointer;color:var(--mut);transition:background .12s,color .12s}
+.crumb a:hover{color:var(--ink);background:var(--panel)}
+.crumb .cur{color:var(--ink);font-weight:500;background:#2a2015;border:1px solid var(--line)}   /* current level */
+.crumb .sep{color:#5e4d3a;font-family:var(--mo);font-size:13px}                                  /* chevron */
+.crumb .sub{font-family:var(--mo);font-size:10.5px;color:var(--mut);font-weight:400}
+.brandrow{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.logo{cursor:pointer;flex:none;line-height:0;text-decoration:none;border-radius:9px;transition:transform .12s,filter .12s}
+.logo:hover{transform:translateY(-1px);filter:brightness(1.13)}      /* the home button — prominent + responsive */
+.logo:active{transform:translateY(0)}
+.logo svg{height:58px;width:auto;display:block}
+/* under-wordmark tagline — calm, lowercase, on the charcoal ground; never out-shouts the wordmark */
+.brand{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-start;gap:2px;line-height:0}
+.brandtag{font-family:var(--mo);font-size:10px;letter-spacing:.18em;color:#766C5A;margin:0;line-height:1;white-space:nowrap;align-self:center;width:0;overflow:visible;display:flex;justify-content:center}  /* centered under the wordmark. The tagline is WIDER than the wordmark, so width:0 keeps it out of the brand column's width calc → the column shrink-wraps to the wordmark; align-self:center puts the 0-width box at the wordmark's centre, and display:flex+justify-content:center overflows the text symmetrically both sides of that centre (text-align:center would overflow right-only). Stays in flow (gap + header height unaffected); .brand's flex-start and the wordmark are untouched */
+.ph svg{opacity:.92}
+.strip{font-family:var(--mo);font-size:11px;color:var(--mut);margin-top:6px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+header#top .strip{min-height:0;background:none;border:1px solid var(--line);border-radius:8px;padding:6px 12px;margin:0;position:static;flex:0 0 auto;margin-left:auto}  /* hard-right stats box. flex:0 0 auto = natural width, no shrink — the inner #strip is a fixed 2-col grid (6 stats → 2×3), so the box is a stable ~300px block well within the wordmark height (header never grows taller). margin-left:auto keeps it right-anchored on whichever row it lands. When it can't fit beside brand+nav, .hrow1's flex-wrap drops it to its own row, still flush right. Overrides the film-rail .strip (:484) that also matches this element */
+.strip .declink{color:inherit;text-decoration:none;cursor:pointer}
+.strip .declink:hover,.strip .declink:focus-visible{color:#E2902A;text-decoration:underline;text-underline-offset:2px;outline:none}
+.hrow1{display:flex;align-items:center;gap:8px;flex-wrap:wrap}   /* anchored fluid row [brand][nav][stats]: brand hard-left, nav grows to fill+center, box hard-right (shrinks). flex-wrap is the safety valve — at wide it's one row (box inline); as it narrows the box reflows then, when it can't fit beside brand+nav, wraps to its own right-aligned row instead of clipping */
+.hbtns{flex:1 0 auto;display:flex;align-items:center;gap:4px;flex-wrap:nowrap;justify-content:center}   /* grows to fill the middle and center the buttons; never shrinks/wraps (the box absorbs the squeeze) */
+.hcrumb{display:flex;justify-content:flex-start}
+.hcrumb .crumb{justify-content:flex-start;font-size:14px}
+.hcrumb .crumb a,.hcrumb .crumb .cur{padding:2px 9px}
+#strip{display:grid;grid-template-columns:auto auto;gap:2px 10px;justify-content:end;align-items:center}
+#strip .stat{flex:0 0 auto;white-space:nowrap}
+/* reflow JS-emitted stats (DOM: library,reviewed,cut,kept,remaining,reclaim) into row-major
+   grid order — row1: library | remaining | reclaim, row2: reviewed | cut | kept */
+#strip .stat:nth-child(1){order:1}  /* library */
+#strip .stat:nth-child(5){order:2}  /* remaining */
+#strip .stat:nth-child(6){order:3}  /* reclaim */
+#strip .stat:nth-child(2){order:4}  /* reviewed */
+#strip .stat:nth-child(3){order:5}  /* cut */
+#strip .stat:nth-child(4){order:6}  /* kept */
+@media (min-width:721px) and (max-width:1199px){
+  /* fold zone: the box can't sit inline, so make it a full-width flat strip under the nav
+     instead of the rigid right-hugging block that leaves dead space */
+  header#top .strip{ flex:1 1 100%; width:100%; margin:0; }   /* claims its own full row */
+  #strip{ display:flex; flex:1; flex-wrap:wrap; justify-content:space-between; gap:4px 16px; }
+                                        /* flat spread row(s); display:flex overrides the
+                                           wide-mode display:grid 2-col block. flex:1 makes
+                                           #strip fill the full-width box (it's a flex ITEM of
+                                           the display:flex .strip) so the stats truly spread
+                                           edge-to-edge instead of left-hugging with dead space */
+}
+@media (max-width:720px){header#top{padding:10px 14px 12px}.hrow1{flex-direction:column;align-items:center;gap:9px}.hbtns{justify-content:center}
+  header#top .hbtns{ flex-wrap:wrap; justify-content:center; width:100%; }
+                                          /* re-enable wrap (override the desktop flex-wrap:nowrap that
+                                             leaks in) + constrain to the column width, so all 8 nav
+                                             buttons wrap to centered rows instead of running ~649px off
+                                             the right edge. This is also the root cause of the brand
+                                             mis-centering: once the nav no longer overflows, the row's
+                                             width is the viewport, so .brand can center true (below). */
+  /* smallest band: the box is in a stacked column, so kill the wide-mode right-push +
+     2-col grid (too wide → clips off the right edge). Make it a flat, full-width, centered
+     wrapping strip that fits the narrow column. */
+  header#top .strip{ width:100%; margin:0; flex:0 0 auto; align-self:flex-start; }
+                                          /* full width of the stacked column, no right-shove.
+                                             align-self:flex-start overrides .hrow1's align-items:center
+                                             so the box anchors to the column's left edge instead of being
+                                             centered against the (nowrap) nav's horizontal overflow, which
+                                             would otherwise drag it off the right edge at phone widths */
+  #strip{ display:flex; flex-wrap:wrap; justify-content:center; gap:4px 14px; }
+                                          /* flat wrapping strip (display:flex kills the 2-col grid),
+                                             centered, wraps to fit the narrow width — no clip */
+  header#top .brand{ align-self:center; align-items:center; max-width:100%; }
+                                          /* center the brand block in the column. Now that the nav
+                                             wraps (above) instead of overflowing, the column's cross-size
+                                             is the viewport width, so align-self:center lands the brand
+                                             at the true centre (was flex-start, needed only to escape the
+                                             old nav-overflow width). align-items:center stacks the
+                                             wordmark centered over the (wider) tagline so both are fully
+                                             visible and share a centre axis. */
+  header#top .brandtag{ width:auto; display:block; }
+                                          /* revert the desktop width:0 + flex-centre hack: at mobile
+                                             the tagline (wider than the wordmark) takes its natural
+                                             width so it's fully visible and defines the lockup width;
+                                             .brand's align-items:center then centres the wordmark over
+                                             it. (width:0 here would let the centred tagline overhang
+                                             past the left edge and clip ~7px.) */
+  header#top .logo svg{ max-width:100%; }   /* wordmark never wider than the column. NOT height:auto:
+       this inline svg is sized by height:58/52px + width:auto with no intrinsic dims (viewBox only),
+       so height:auto collapses it to 0x0. max-width:100% alone is an inert clip guard (the wordmark
+       is ~97px, far under the column) that preserves the height-driven sizing. */
+}
+.dechead{font-family:var(--hd);font-size:20px;color:var(--ink);margin:16px 2px 12px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.dechead .deccount{font-family:var(--mo);font-size:12px;color:var(--mut)}
+.decempty{font-family:var(--mo);font-size:13px;color:var(--mut);padding:30px 4px;line-height:1.5}
+.strip b{color:var(--ink)} .strip .amber{color:var(--amber)} .strip .g{color:var(--green)} .strip .r{color:var(--cut)}
+.bar{height:6px;background:#0c0a07;border-radius:3px;overflow:hidden;border:1px solid var(--line)}
+.bar>i{display:block;height:100%;background:var(--amber)} .bar.done>i{background:var(--green)}
+button{font-family:var(--mo);font-size:12px;background:#221b13;color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:7px 10px;cursor:pointer}
+button:hover{border-color:var(--amber)}
+button.amber{background:var(--amber);color:#1a1207;border-color:var(--amber);font-weight:600}
+button.green{background:var(--green);color:#04240f;border-color:var(--green);font-weight:600}
+/* header action buttons — refined ghost pills matching the nav (radius/hover language) */
+.strip button,.hbtns button{background:transparent;color:var(--mut);border:1px solid var(--line);border-radius:8px;padding:5px 7px;font-size:11px;transition:background .12s,color .12s,border-color .12s,transform .1s}
+.strip button:hover,.hbtns button:hover{color:var(--ink);background:var(--panel);border-color:var(--amber)}
+.strip button:active,.hbtns button:active{transform:translateY(1px)}
+#jumpbtn{color:var(--amber);border-color:#5a3f1e}                                  /* the key nav action: jump to work */
+#jumpbtn:hover{color:var(--amber);background:#2a2015;border-color:var(--amber)}
+/* unified inline-SVG nav glyphs — strokes inherit the button's text color (currentColor:
+   dim default → amber when active); the one #E2902A accent fill per icon is fixed. */
+.hbtns button{display:inline-flex;align-items:center;gap:4px;line-height:1}
+.navico{width:18px;height:18px;flex:none}
+.hbtns button.navon{color:var(--amber);border-color:#5a3f1e}        /* active view: glyph + label recolor amber */
+@media (prefers-reduced-motion:reduce){.hbtns button{transition:none}}
+select{font-family:var(--mo);font-size:12px;background:#221b13;color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:6px 8px}
+.spacer{flex:1}
+main{padding:14px;max-width:1280px;margin:0 auto;padding-top:var(--gbar-h)}
+.year{margin:18px 0 8px;font-family:var(--hd);font-size:22px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.year .yp{font-family:var(--mo);font-size:12px;color:var(--mut)}
+/* ===== Overview redesign: per-year scrubbable carousels + swappable month tiles ===== */
+/* quiet B/C treatment toggle */
+.ttoggle{font-family:var(--mo);font-size:11px;color:var(--mut);display:flex;justify-content:flex-end;align-items:center;gap:3px;margin:0 2px 10px}
+.ttoggle a{color:var(--mut);cursor:pointer;text-decoration:none;padding:2px 6px;border-radius:5px}
+.ttoggle a:hover{color:var(--ink)}
+.ttoggle a.on{color:var(--ink);background:var(--panel)}
+/* per-year carousel row (user-driven: arrows + drag/swipe + arrow-keys; never auto-animates) */
+.yrow{position:relative;margin-bottom:6px}
+.yscroll{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:none;padding:2px 0 8px;outline:none}
+.yscroll::-webkit-scrollbar{display:none}
+.yscroll>.ytile{scroll-snap-align:start}
+.yarrow{position:absolute;top:0;bottom:10px;width:40px;z-index:5;display:none;align-items:center;justify-content:center;
+  cursor:pointer;border:none;font-family:var(--hd);font-size:24px;color:var(--ink)}
+.yarrow.show{display:flex}
+.yprev{left:0;background:linear-gradient(to right,color-mix(in srgb,var(--bg) 85%,transparent),transparent)}
+.ynext{right:0;background:linear-gradient(to left,color-mix(in srgb,var(--bg) 85%,transparent),transparent)}
+.yarrow:hover{color:var(--amber)}
+/* month tile — ONE block, two crisp treatments switched by a body class (no blur ever) */
+.ytile{position:relative;flex:none;width:clamp(190px,22vw,272px);aspect-ratio:4/5;border-radius:11px;overflow:hidden;
+  background:var(--panel);border:1px solid var(--line);cursor:pointer;transition:border-color .12s,transform .12s}
+.ytile:hover{border-color:var(--amber);transform:translateY(-2px)}
+.ytile.cur{border-color:var(--amber)}                                   /* the one safelight: current in-progress month */
+.ytile .hero{position:absolute;inset:0;z-index:0}
+.ytile .hero img{width:100%;height:100%;object-fit:cover;display:block}
+/* photobook spread: two portrait pages hinged at a center spine (book gutter) */
+.ytile .spread{position:absolute;left:0;right:0;top:0;height:56%;z-index:0;background:var(--panel);perspective:1100px}
+.ytile .spread .pgL{position:absolute;left:0;top:0;bottom:0;width:calc(50% - 1px);overflow:hidden;background:#0a0805;z-index:0}     /* static left page — does NOT animate */
+.ytile .spread .under{position:absolute;right:0;top:0;bottom:0;width:calc(50% - 1px);overflow:hidden;background:#0a0805;z-index:1} /* next-right, revealed beneath the leaf */
+.ytile .spread .leaf{position:absolute;left:50%;top:0;bottom:0;width:50%;z-index:2;transform-origin:left center;transform-style:preserve-3d;transform:rotateY(0deg);will-change:transform}  /* the single turning right leaf, hinged at the spine */
+.ytile .spread .leaf .face{position:absolute;inset:0;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:#0a0805}
+.ytile .spread .leaf .back{transform:rotateY(180deg)}                       /* BACK = next-left, readable when the leaf lands face-down on the left */
+.ytile .spread .pgL img,.ytile .spread .under img,.ytile .spread .leaf .face img{width:100%;height:100%;object-fit:cover;display:block}
+.ytile .spread .spine{position:absolute;left:calc(50% - 1px);top:0;bottom:0;width:2px;z-index:4;background:color-mix(in srgb,var(--bg) 40%,#000);box-shadow:0 0 7px 2px rgba(0,0,0,.55)}
+.ytile .spread .pgL::after{content:"";position:absolute;top:0;bottom:0;right:0;width:16px;pointer-events:none;background:linear-gradient(to right,transparent,rgba(0,0,0,.4))}   /* gutter shadow */
+.ytile .spread .under::after{content:"";position:absolute;top:0;bottom:0;left:0;width:16px;pointer-events:none;background:linear-gradient(to left,transparent,rgba(0,0,0,.4))}
+.ytile .spread.single .spine,.ytile .spread.single .under,.ytile .spread.single .leaf{display:none}   /* 1 good frame -> one full-width page */
+.ytile .spread.single .pgL{width:100%}
+.ytile .spread.single .pgL::after{display:none}
+.ytile .tscrim{position:absolute;inset:0;z-index:1;pointer-events:none}
+.ytile .tbody{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:11px}
+.ytile .mn{font-family:var(--hd);font-size:18px;color:var(--ink);line-height:1.05}
+.ytile.cur .mn{color:var(--amber)}
+.ytile .mprose{font-family:var(--bd);font-style:italic;font-size:12px;line-height:1.34;color:var(--ink);margin-top:4px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}   /* Newsreader italic, 2-line clamp */
+.ytile .mmeta{font-family:var(--mo);font-size:10px;letter-spacing:.03em;color:var(--mut);margin-top:5px}
+.ytile.cur .mmeta .pct{color:var(--amber)}
+/* treatment B (default): full-bleed hero + directional bottom scrim */
+body.t-hero .ytile .spread{display:none}
+body.t-hero .ytile .tscrim{background:linear-gradient(to bottom,
+   transparent 0%,color-mix(in srgb,var(--bg) 10%,transparent) 36%,
+   color-mix(in srgb,var(--bg) 70%,transparent) 68%,color-mix(in srgb,var(--bg) 95%,transparent) 100%)}
+/* treatment C: crisp 2x2 mosaic up top + SOLID charcoal band below (text fully on ground) */
+body.t-mosaic .ytile .hero{display:none}
+body.t-mosaic .ytile .tscrim{display:none}
+body.t-mosaic .ytile .tbody{top:56%;background:var(--bg);border-top:1px solid var(--line)}
+/* discovery carousel as a 35mm FILM STRIP (presentation only; selection/cycling/marquee/click/reduced-motion unchanged) */
+.carousel{position:relative;overflow:hidden;margin:6px 0 26px;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
+          mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}   /* soft edge-fade L/R */
+/* the track carries a warm film base + sprocket bands so perforations scroll with it and stay
+   continuous across frames AND across the -50% loop seam (each 210px frame = exactly 7 perfs) */
+.marquee{display:flex;gap:0;width:max-content;will-change:transform;animation:marq 120s linear infinite;
+  background-color:color-mix(in srgb,var(--bg) 66%,var(--line));
+  background-image:
+    radial-gradient(ellipse 10px 5px at 15px 7px,color-mix(in srgb,var(--mut) 28%,var(--bg)) 60%,transparent 64%),
+    radial-gradient(ellipse 10px 5px at 15px 7px,color-mix(in srgb,var(--mut) 28%,var(--bg)) 60%,transparent 64%);
+  background-repeat:repeat-x,repeat-x;background-position:left top,left bottom;background-size:30px 14px,30px 14px}
+.marquee:hover{animation-play-state:paused}
+@keyframes marq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.ctile{flex:none;display:flex;flex-direction:column;width:210px;height:175px;padding:14px 7px;cursor:pointer;background:transparent}
+.ctile .cframe{position:relative;flex:0 0 131px;overflow:hidden;border-radius:2px;background:color-mix(in srgb,var(--bg) 66%,var(--line))}  /* window bg = film base, so portrait gutters read as film */
+.ctile .cframe .bg{border-radius:2px}
+.ctile .cframe .bg.port{width:auto;height:100%;left:50%;right:auto;transform:translateX(-50%);object-fit:contain;
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--line) 55%,transparent)}   /* portrait: true aspect, pillarboxed on film base, hairline edge */
+.ctile .crebate{flex:1;display:flex;align-items:center;gap:7px;padding:0 1px;font-family:var(--mo);font-size:8px;letter-spacing:.06em;line-height:1;white-space:nowrap;overflow:hidden}
+.ctile .cep{color:color-mix(in srgb,var(--mut) 80%,var(--bg))}            /* month — faint edge print */
+.ctile .cnum{color:color-mix(in srgb,var(--mut) 52%,var(--bg))}          /* decorative frame-number tick */
+.ctile .cstock{margin-left:auto;color:color-mix(in srgb,var(--mut) 36%,var(--bg))}  /* recurring film-stock mark, faintest */
+.ctile:hover .cframe,.ctile:focus-within .cframe{box-shadow:0 0 0 2px var(--amber)}  /* the ONE safelight: loupe focus ring */
+@media (prefers-reduced-motion:reduce){.marquee{animation:none}}
+/* month view: each week's summary is a HEADER above its own row of day-tiles */
+.wblock{margin:22px 0 4px}
+.whead{border-bottom:1px solid var(--line);padding-bottom:7px;margin-bottom:9px}
+.wlabel{font-family:var(--mo);font-size:12px;color:var(--amber);display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.wlabel .wc{color:var(--mut)}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:9px}
+.dcell{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:10px;cursor:pointer;transition:.1s}
+.dcell:hover{border-color:var(--amber);transform:translateY(-1px)}
+.dcell.untouched{opacity:.62} .dcell.complete{border-color:var(--green)}
+.dcell .dn{font-family:var(--hd);font-size:16px}
+.dcell .dc{font-family:var(--mo);font-size:10.5px;color:var(--mut);margin:5px 0 7px}.dcell .dc b{color:var(--ink)}
+/* living contact-sheet card backdrops — iPhone-ish portrait tiles */
+.mcell,.dcell{position:relative;overflow:hidden;padding:0;aspect-ratio:9/16}
+.mcell .cardbody,.dcell .cardbody{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;justify-content:flex-end}
+.mcell .cardbody{padding:12px} .dcell .cardbody{padding:10px}
+.bg{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .8s ease;pointer-events:none}
+.bg.show{opacity:1}
+.scrim{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(to top right,rgba(20,17,12,.92) 0%,rgba(20,17,12,.62) 45%,rgba(20,17,12,.15) 100%)}
+@media (prefers-reduced-motion:reduce){.bg{transition:none}}
+/* contact-sheet day cards: each week is a film strip on a film base, days are frames */
+.csheet{background:linear-gradient(#241a10,#1b1308);border:1px solid #3a2c1a;border-radius:8px;padding:16px 14px 12px}
+.csperf{display:flex;justify-content:space-between;align-items:center;gap:6px;height:7px;overflow:hidden}
+.csperf i{flex:0 0 13px;height:7px;border-radius:2px;background:#0f0b06}
+.csrow{display:flex;gap:10px;overflow-x:auto;padding:11px 1px;scrollbar-width:thin}
+.dframe{flex:1 0 112px;min-width:112px;max-width:168px;cursor:pointer;border-radius:3px;transition:transform .1s}
+.dframe:hover{transform:translateY(-2px)}
+.dframe.untouched{opacity:.6}
+.dwin{position:relative;aspect-ratio:4/5;border-radius:2px;overflow:hidden;background:#0f0b06;box-shadow:inset 0 0 0 1px rgba(233,228,214,.10)}
+.dframe.complete .dwin{box-shadow:inset 0 0 0 1px rgba(99,153,34,.55)}
+.dframe.amber{box-shadow:0 0 0 2px #ba7517}
+.dreb{display:flex;justify-content:space-between;align-items:baseline;margin-top:6px;padding:0 1px}
+.dreb .dlab{font-family:var(--mo);font-size:11px;letter-spacing:.08em;color:#cbb48c}
+.dframe.amber .dreb .dlab{color:#e2902a}
+.dreb .dct{font-family:var(--mo);font-size:10px;color:#7d6f54}
+.dnotch{height:2px;margin-top:5px;background:#4a3a22;border-radius:1px;overflow:hidden}
+.dnotch i{display:block;height:100%;background:#8a6a3a}
+.dframe.amber .dnotch i{background:#ba7517}
+@media (prefers-reduced-motion:reduce){.dframe{transition:none}}
+/* overview: month card = CLEAN photo tile, with the summary as a CAPTION below it on the charcoal ground (never over the image) */
+.mitem{display:flex;flex-direction:column;gap:6px}
+.mcell{aspect-ratio:4/5}                       /* shorter than the day tiles now that overview cards are wider */
+.mcap{padding:0 3px 2px;min-height:42px}
+.mcap .sum-prose.ov{font-size:12px;line-height:1.36;margin-top:0;color:var(--ink)}   /* Newsreader italic, clamped 2 lines (clamp from .sum-prose.ov) */
+.mcap .msum{font-size:10px;line-height:1.32;margin-top:4px;color:var(--mut)}          /* JetBrains-Mono facts/venue strip, amber standout */
+/* AI-polished period summaries */
+.sum-prose{font-family:var(--bd);font-style:italic;font-size:13.5px;color:var(--ink);line-height:1.36}
+.sum-facts{font-family:var(--mo);font-size:11px;color:var(--mut);margin-top:3px}
+.sum-facts .amber,.msum .amber{color:var(--amber)}
+.daysum{padding:8px 2px 6px;border-bottom:1px solid var(--line)}
+.whead .wsum{display:block;margin-top:5px}                                  /* full prose, left-aligned, on charcoal — belongs to its week */
+.whead .wsum .sum-prose{font-size:13.5px;color:var(--ink)}                  /* Newsreader italic (from .sum-prose) */
+.whead .wsum .sum-facts{font-size:11px;margin-top:3px}                      /* JetBrains-Mono facts/venue strip */
+.msum{font-family:var(--mo);font-size:9.5px;color:var(--mut);margin-top:5px;line-height:1.3}
+.sum-prose.ov{font-size:10.5px;line-height:1.3;margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.toolbar{position:sticky;top:var(--gbar-h);z-index:20;background:rgba(21,17,13,.92);backdrop-filter:blur(4px);padding:8px 0;display:flex;gap:7px;flex-wrap:wrap;align-items:center;border-bottom:1px solid var(--line)}
+/* relocated temporal trail living in the Month/Day toolbar — compact, mirrors the header crumb;
+   glass pill on the .cur node comes from the shared .crumb .cur rules (incl. html.loupe-glass) */
+.toolbar .crumb{font-size:14px}
+.toolbar .crumb a,.toolbar .crumb .cur{padding:2px 9px}
+/* the two colored action buttons stay together and right-aligned even when the wide day trail
+   forces the toolbar to wrap (margin-left:auto replaces the old spacer; works per wrapped line) */
+.toolbar .tbactions{margin-left:auto;display:flex;gap:7px;align-items:center}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;padding:8px 0}
+.tile{position:relative;background:#0c0a07;border:2px solid #2a2218;border-radius:8px;overflow:hidden;cursor:pointer}
+.tile.keep{border-color:var(--keep)} .tile.cut{border-color:var(--cut);opacity:.45}
+.tile img{width:100%;height:150px;object-fit:contain;background:#000;display:block}
+.tile .ph{height:150px;display:flex;align-items:center;justify-content:center;color:#6b5b46;font-family:var(--mo);font-size:10px;background:#100d09}
+.tcap{font-family:var(--mo);font-size:10px;color:var(--mut);padding:4px 5px}
+.badge2{position:absolute;font-family:var(--mo);font-size:9px;padding:1px 4px;border-radius:3px}
+.rb{position:absolute;top:4px;left:4px;font-family:var(--mo);font-size:9px;font-weight:600;padding:1px 5px;border-radius:3px;color:#160f06}
+.b-fp{top:24px;left:4px;background:#ffd479;color:#222}
+.b-pip{top:4px;right:4px;background:#000b;font-weight:600;border:1px solid}
+.b-live{bottom:4px;left:4px;background:#000b;color:var(--amber);border:1px solid var(--amber)}
+#flive.on{background:var(--amber);color:#160f06;border-color:var(--amber)}
+.tile.prot{box-shadow:inset 0 0 0 2px var(--amber)}
+.chip{font-family:var(--mo);font-size:11px;padding:5px 9px;border:1px solid var(--line);border-radius:14px;cursor:pointer;color:var(--mut)}
+.chip.on{border-color:var(--amber);color:var(--ink);background:#2a2015}
+.candbar{display:flex;gap:7px;flex-wrap:wrap;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.drv{font-family:var(--mo);font-size:12.5px;padding:6px 9px;border-radius:6px;margin-bottom:8px;color:#160f06;font-weight:600;line-height:1.35}
+#modetog.on{background:var(--amber);color:#1a1207;border-color:var(--amber);font-weight:600}
+.b-play{bottom:4px;left:4px;background:#000a;color:#fff;border:1px solid #fff6}
+.b-st{bottom:4px;right:4px} .st-keep{background:var(--keep);color:#04240f} .st-cut{background:var(--cut);color:#fff}
+.focus{position:fixed;inset:0;z-index:50;background:#0b0907;display:none;flex-direction:column}
+.focus.on{display:flex}
+.fhead{font-family:var(--mo);font-size:12px;color:var(--mut);padding:8px 12px;display:flex;gap:10px;align-items:center;border-bottom:1px solid var(--line)}
+.stage{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#000;position:relative;touch-action:pan-y}
+.stage img,.stage video{max-width:100%;max-height:100%;object-fit:contain}
+/* focus body: photo (brightest) at left, the vertical signal panel at right */
+.fbody{flex:1;display:flex;min-height:0;position:relative}
+.meta{flex:0 0 336px;width:336px;background:var(--bg2);border-left:1px solid var(--line);overflow:auto;padding:12px 14px}
+.focus.nosig .meta{display:none}
+/* relocated focus controls (committed, class-independent): viewing cluster top-right of the stage, nav top-left.
+   Anchored to .fbody (never regenerated) — not #fstage, whose innerHTML is rebuilt every frame. */
+#fviewbar{position:absolute;top:10px;right:calc(336px + 12px);z-index:6;display:flex;gap:8px;pointer-events:none}
+#fnav{position:absolute;top:50%;left:12px;transform:translateY(-50%);z-index:6;display:flex;gap:8px;pointer-events:none}
+#fnext{position:absolute;top:50%;right:calc(336px + 12px);transform:translateY(-50%);z-index:6;display:flex;gap:8px;pointer-events:none}
+#fviewbar button,#fnav button,#fnext button{pointer-events:auto}
+@media (max-width:680px){#fviewbar{right:12px}#fnav{top:10px;transform:none}#fnext{top:48px;right:12px;transform:none}}  /* narrow: .meta drops below the stage, so hug the right gutter */
+.sigtog{display:none}
+/* signal panel — EXIF-style mono readout, hairline-grouped */
+.sig{margin:0 0 13px}
+.sig-h{font-family:var(--mo);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--amber);border-bottom:1px solid var(--line);padding-bottom:3px;margin-bottom:7px}
+.srow{display:grid;grid-template-columns:auto 1fr;font-family:var(--mo);font-size:11.5px;gap:2px 12px;align-items:baseline}
+.srow .k{color:var(--mut)} .srow .v{color:var(--ink);text-align:right;word-break:break-word}
+.na{color:var(--mut);font-style:italic}
+/* score = value + library-relative percentile bar (amber, tints at extremes) */
+.score{margin:9px 0}
+.score .top{display:flex;justify-content:space-between;font-family:var(--mo);font-size:11px}
+.score .top .nm{color:var(--mut)} .score .top .vl{color:var(--ink)} .score .top .pc{background:none;border:0;border-radius:0;padding:0;box-shadow:none;cursor:default;font-family:var(--mo);font-size:11px;color:rgba(233,228,214,.55);margin-left:6px}  /* quiet: reset the bled-through trip-postcard .pc (:301) fill/pill */
+.pbar{height:6px;background:#241d15;border:1px solid var(--line);border-radius:4px;overflow:hidden;margin-top:4px}
+.pbar i{display:block;height:100%;background:var(--amber);transition:width .35s ease}
+/* content labels = chips with confidence; the screenshot/doc cull-tell stands apart */
+.sdtag{display:inline-block;font-family:var(--mo);font-size:11px;font-weight:600;padding:3px 9px;border-radius:5px;background:#21343a;color:#a7d7df;border:1px solid #7fb0b8;margin-bottom:7px}
+.lchip{display:inline-block;font-family:var(--mo);font-size:11px;padding:2px 8px;margin:0 4px 4px 0;border:1px solid var(--line);border-radius:12px;color:var(--ink);white-space:nowrap}
+.lchip b{color:var(--mut);font-weight:400;margin-left:5px}
+.lgrp{font-family:var(--mo);font-size:10.5px;color:var(--mut);margin:5px 0 2px}
+/* people chips; protected people get the amber ring */
+.pchip{display:inline-block;font-family:var(--mo);font-size:11px;padding:3px 9px;margin:0 5px 5px 0;border-radius:13px;background:#241d15;border:1px solid var(--line);color:var(--ink)}
+.pchip.prot{border-color:var(--amber);box-shadow:inset 0 0 0 1px var(--amber);color:#f0d9b3}
+.pchip.prot::before{content:'●';color:var(--amber);margin-right:5px;font-size:8px;vertical-align:1px}
+.ctx{font-family:var(--hd);font-size:16px;color:var(--ink);margin-bottom:3px}
+.ctx .wd{color:var(--amber)}
+.ctx .pl{font-family:var(--bd);font-size:14px;color:var(--mut);display:block;margin-top:2px}
+.exif{font-family:var(--mo);font-size:11.5px;color:var(--ink);display:grid;grid-template-columns:auto 1fr;gap:2px 12px;margin-top:8px}
+.exif .k{color:var(--mut)}
+.hints{font-family:var(--mo);font-size:11px;color:var(--mut);margin-top:6px}
+.gps{font-family:var(--mo);font-size:11.5px;margin-top:8px} .gps .coord{color:var(--mut)}
+.exp{margin-top:8px} .exp summary{font-family:var(--mo);font-size:11px;color:var(--amber);cursor:pointer}
+.acts{display:flex;gap:8px;padding:10px 12px;border-top:1px solid var(--line);background:#15110d}
+.acts button{flex:1;padding:14px 8px;font-size:14px}
+.bcut{background:#3a1d1a;border-color:var(--cut);color:#ff9a8f}
+.bkeep{background:#15301f;border-color:var(--keep);color:#9be8b6}
+.fr{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;font-family:var(--hd);font-size:64px;opacity:0;transition:.12s}
+.fr.show{opacity:.92} .fr.cut{color:var(--cut)} .fr.keep{color:var(--green)} .fr.skip{color:var(--mut)}
+#toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%);background:#2a2015;border:1px solid var(--amber);color:var(--ink);font-family:var(--mo);font-size:12px;padding:8px 14px;border-radius:8px;z-index:70;display:none}
+@media (max-width:680px){main{padding:8px;padding-top:var(--gbar-h)}.logo svg{height:52px}.crumb{font-size:14px}.dgrid{grid-template-columns:repeat(3,1fr)}.grid{grid-template-columns:repeat(2,1fr)}
+ .tile img,.tile .ph{height:34vw}.toolbar{top:var(--gbar-h)}.acts button{padding:16px 6px;font-size:15px}
+ /* narrow: panel collapses BELOW the frame, toggleable from the header */
+ .fbody{flex-direction:column}
+ .meta{flex:none;width:auto;border-left:none;border-top:1px solid var(--line);max-height:44vh}
+ .sigtog{display:inline-block}}
+@media (max-width:380px){.grid{grid-template-columns:1fr}.tile img,.tile .ph{height:60vw}}
+@media (prefers-reduced-motion:reduce){.pbar i{transition:none}.fr{transition:none}}
+/* ---- Places (spatial peer to Overview) ---- */
+#placesview{position:fixed;top:var(--gbar-h);left:0;right:0;bottom:0;z-index:45;background:var(--bg);display:none;flex-direction:column;overflow-y:auto}
+#placesview.on{display:flex}
+.plbar{display:flex;gap:12px;align-items:center;padding:9px 14px;border-bottom:1px solid var(--line);font-family:var(--mo);font-size:12px;color:var(--mut)}
+.plback{font-family:var(--mo);font-size:12px}
+.pltitle{font-family:var(--hd);font-size:17px;color:var(--ink)}
+.plcov{color:var(--mut)}
+.pltoggle{display:flex;gap:6px;align-items:center;color:var(--ink);cursor:pointer}
+.pltabs{display:flex;gap:6px}
+.plmain{flex:1;display:flex;min-height:0}
+/* --- postcard gallery (primary surface): cream prints on the charcoal bench --- */
+#plgallery{flex:1;overflow:auto;padding:22px;display:grid;gap:22px;align-content:start;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));background:var(--bg)}
+.pc{position:relative;background:#efe7d6;border-radius:3px;padding:11px 11px 0;cursor:pointer;
+  box-shadow:0 2px 5px #0007,0 0 0 1px #0004;transition:transform .14s ease,box-shadow .14s ease;outline:none}
+.pc:hover,.pc:focus-visible{transform:translateY(-3px);box-shadow:0 10px 22px #0009,0 0 0 1px #0006}
+.pc:focus-visible{box-shadow:0 10px 22px #0009,0 0 0 2px var(--amber)}
+.pc .stripe{position:absolute;top:0;left:0;right:0;height:5px;border-radius:3px 3px 0 0;
+  background:repeating-linear-gradient(-45deg,#B0463E 0 7px,transparent 7px 14px,#2e5a86 14px 21px,transparent 21px 28px)}
+.pc .hero{display:block;width:100%;aspect-ratio:var(--ar,4/3);object-fit:cover;background:#cabfa9;border:1px solid #0002}
+.pc .well{display:flex;align-items:center;justify-content:center;width:100%;aspect-ratio:4/3;background:#cabfa9;color:#6b5f4a;font-family:var(--mo);font-size:11px;border:1px solid #0002}
+.pc .pm{position:absolute;top:20px;right:18px;width:62px;height:62px;border:2px solid #9c2f28;border-radius:50%;
+  color:#9c2f28;transform:rotate(-13deg);font-family:var(--mo);text-align:center;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:.82;background:#efe7d6aa}
+.pc .pm b{font-size:15px;font-weight:700;letter-spacing:.5px}.pc .pm i{font-size:9px;font-style:normal}
+.pc .cap{padding:9px 2px 4px}
+.pc .city{font-family:var(--hd);font-size:21px;color:#241d15;line-height:1.05}
+.pc .reg{font-family:var(--bd);font-size:13px;color:#5e533f;margin-top:1px}
+.pc .dr{font-family:var(--mo);font-size:11px;color:#7a6c50;margin-top:5px}
+.pc .foot{border-top:1px solid #cabfa9;margin-top:8px;padding:6px 2px 9px;font-family:var(--mo);font-size:10.5px;color:#6b5f4a;
+  display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.pc .rev{position:absolute;left:11px;bottom:64px;font-family:var(--mo);font-size:12px;font-weight:600;color:#160f06;
+  background:var(--amber);border-radius:4px;padding:4px 9px;opacity:0;transform:translateY(4px);transition:.14s;pointer-events:none}
+.pc:hover .rev,.pc:focus-visible .rev{opacity:1;transform:translateY(0)}
+.plcl{background:rgba(186,117,23,.86);color:#160f06;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mo);font-weight:600;border:2px solid #f0d9b3;box-shadow:0 0 0 4px rgba(186,117,23,.18)}
+.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:var(--panel);color:var(--ink)}
+.leaflet-bar a{background:var(--panel)!important;color:var(--ink)!important;border-color:var(--line)!important}
+.leaflet-container{background:transparent}   /* the warm field comes from #lmap's gradient, not tiles */
+@media (prefers-reduced-motion:reduce){.pc,.pc .rev{transition:none}.pc:hover,.pc:focus-visible{transform:none}}
+@media (max-width:680px){#plgallery{padding:12px;gap:14px;grid-template-columns:1fr}}
+.plmaplink{font-family:var(--mo);font-size:12px;color:var(--amber);background:transparent;
+  border:1px solid #5a3f1e;border-radius:8px;padding:6px 12px;cursor:pointer;text-decoration:none;transition:.12s}
+.plmaplink:hover{background:#2a2015;border-color:var(--amber);color:var(--lit)}
+.pc .foot .vmap{color:#8a5a1e;cursor:pointer;text-decoration:none;font-weight:600}
+.pc .foot .vmap:hover{color:#9c2f28;text-decoration:underline}
+/* ===================== Map: the dark light-table place browser ===================== */
+#mapview{position:fixed;top:var(--gbar-h);left:0;right:0;bottom:0;z-index:45;background:var(--bg);display:none;flex-direction:column;overflow-y:auto}
+#mapview.on{display:flex}
+.mapbar{display:flex;gap:12px;align-items:center;padding:9px 14px;border-bottom:1px solid var(--line);
+  font-family:var(--mo);font-size:12px;color:var(--mut)}
+.mapmain{flex:1;position:relative;min-height:0}
+#lmap{position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 30%,#1b1610 0%,#14110C 70%)}  /* warm "light-table" field (no tiles) */
+/* Layers panel — the chrome card, top-left, over the map */
+.mappanel{position:absolute;top:14px;left:14px;z-index:600;width:228px;
+  background:rgba(29,24,18,.93);backdrop-filter:blur(7px);border:1px solid var(--line);border-radius:12px;
+  padding:13px 14px;box-shadow:0 12px 34px -10px #000c}
+.mpsec{margin:0 0 13px}.mpsec:last-child{margin:0}
+.mphead{font-family:var(--mo);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);
+  margin:0 0 9px;display:flex;align-items:baseline;gap:8px}
+.mphint{margin-left:auto;color:var(--mut);letter-spacing:.02em;text-transform:none;font-size:11px}
+.mprow{display:flex;align-items:center;gap:9px;padding:5px 0;font-family:var(--bd);font-size:14px;color:var(--ink);cursor:pointer}
+.mprow input{accent-color:var(--amber);width:15px;height:15px;flex:none;cursor:pointer}
+.mprow input:disabled{cursor:default}
+.mprow .mpname{flex:1}
+.mprow i{font-family:var(--mo);font-style:normal;font-size:10px;color:var(--faint)}
+/* time scrubber — dual handle over the library span */
+.scrub{position:relative;height:30px;margin-top:2px}
+.scrubtrack{position:absolute;top:13px;left:3px;right:3px;height:4px;border-radius:2px;background:#0c0a07;border:1px solid var(--line)}
+.scrubfill{position:absolute;top:0;bottom:0;background:var(--amber);border-radius:2px;opacity:.85}
+.scrub input[type=range]{position:absolute;top:6px;left:0;width:100%;margin:0;background:none;pointer-events:none;-webkit-appearance:none;appearance:none;height:18px}
+.scrub input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;pointer-events:auto;width:15px;height:15px;border-radius:50%;
+  background:var(--lit);border:2px solid #1a1207;cursor:grab;box-shadow:0 0 7px 1px rgba(186,117,23,.6)}
+.scrub input[type=range]::-moz-range-thumb{pointer-events:auto;width:15px;height:15px;border-radius:50%;
+  background:var(--lit);border:2px solid #1a1207;cursor:grab}
+.scrub input[type=range]:focus-visible::-webkit-slider-thumb{outline:2px solid var(--ink);outline-offset:2px}
+.mpleg{display:flex;align-items:center;gap:9px;font-family:var(--mo);font-size:11px;color:var(--mut);padding:3px 0}
+.lgdot{width:14px;height:14px;border-radius:50%;flex:none;background:rgba(186,117,23,.86);border:2px solid #f0d9b3;box-shadow:0 0 0 3px rgba(186,117,23,.18)}
+.lgzone{width:15px;height:15px;border-radius:50%;flex:none;border:1.5px dashed var(--amber);background:rgba(186,117,23,.1)}
+.lgtrip{width:16px;height:0;flex:none;border-top:2px dashed #cdb389}
+/* un-geotagged honesty note, bottom-right (the card takes the left) */
+.mapnote{position:absolute;right:14px;bottom:14px;z-index:600;max-width:280px;
+  background:rgba(20,17,12,.88);border:1px solid var(--line);border-radius:9px;padding:8px 12px;
+  font-family:var(--mo);font-size:11px;color:var(--mut);line-height:1.5}
+.mapnote b{color:var(--ink)}.mapnote a{color:var(--amber);cursor:pointer}
+/* selected-place preview card — floats lower-left on desktop, slides up on appear */
+.mapcard{position:absolute;left:14px;bottom:14px;z-index:650;width:286px;display:none;
+  background:#efe7d6;color:#241d15;border-radius:6px;padding:15px 16px 16px;box-shadow:0 18px 44px -12px #000e,0 0 0 1px #0006;
+  opacity:0;transform:translateY(14px);transition:opacity .22s ease,transform .22s ease}
+.mapcard.on{display:block}
+.mapcard.show{opacity:1;transform:none}
+.mapcard .mcclose{position:absolute;top:8px;right:9px;width:22px;height:22px;padding:0;border-radius:50%;
+  background:#0000;border:1px solid #00000022;color:#6b5f4a;font-size:12px;cursor:pointer;line-height:1}
+.mapcard .mcclose:hover{background:#0000000d;border-color:#0003}
+.mceyebrow{font-family:var(--mo);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9c6512}
+.mctitle{font-family:var(--hd);font-weight:500;font-size:23px;line-height:1.04;color:#241d15;padding-right:20px;margin-top:5px}
+.mcsub{font-family:var(--mo);font-size:11px;color:#6b5f4a;margin-top:5px}
+.mcthumbs{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:12px 0 13px}
+.mcthumbs img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:2px;background:#cabfa9;display:block}
+.mapcard .mcopen{width:100%;font-family:var(--mo);font-size:12px;padding:10px;border-radius:6px;
+  background:var(--amber);color:#160f06;border:1px solid var(--amber);font-weight:600;cursor:pointer}
+.mapcard .mcopen:hover{background:var(--lit)}
+/* cluster marker: warm GLOWING dot (soft amber halo → transparent + warm core) + Fraunces paper label */
+/* ---- D13 / audit 9.2: clusters are frame-stacks, not dots --------------------
+   "At country/state zoom, clusters render as frame-stacks (2-3 offset rectangles +
+   tabular count), never dots -- photographs remain the unit even at 30,000 ft", and
+   "Heat ring: cluster border thickness encodes count decile (1-4px) in neutral; no
+   heat-map color washes (chroma rule)."
+
+   All three rules were broken by one marker. It was a circle (border-radius:50%), it
+   carried an amber radial-gradient with an 18px glow -- which is exactly the heat-map
+   colour wash the chroma rule forbids -- and it encoded count only through diameter,
+   so there was no ring to read at all.
+
+   The stack is now the marker: two or three offset paper rectangles with the count on
+   the front one, sized as photographs rather than discs. Count is still legible from
+   size, but the decile is what the border thickness carries, in neutral. */
+.mcl{position:relative;display:flex;align-items:center;justify-content:center;
+  font-family:var(--mo);font-weight:600;color:#1a1207;cursor:pointer;transition:transform .12s;
+  filter:drop-shadow(0 3px 7px rgba(0,0,0,.55))}
+.mcl i,.mcl b{position:absolute;inset:0;border-radius:2px;background:#e8e0cf;
+  border:1px solid rgba(26,18,7,.5)}
+.mcl .f2{transform:rotate(-5deg) translate(-3px,2px);background:#cdc4b0}
+.mcl .f3{transform:rotate(4.5deg) translate(3px,-2px);background:#b9b09d}
+.mcl b{display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums;
+  border-style:solid;border-color:#1a1207;font-weight:600}
+.mcl:hover{transform:scale(1.08)}
+.mcl.sel b{background:#fff;border-color:var(--amber)}
+.mcl.sel{color:#1a1207;                                                    /* the one selection-state exception: white */
+  background:none;
+  box-shadow:0 0 0 2px #fff,0 0 20px 7px rgba(255,255,255,.5)}
+.mcl-lbl{position:absolute;left:50%;top:100%;transform:translateX(-50%);margin-top:5px;white-space:nowrap;
+  font-family:var(--hd);font-weight:500;font-size:12px;color:#241d15;background:#efe7d6;border:1px solid #00000022;border-radius:2px;
+  padding:1px 7px;box-shadow:0 2px 6px #0007;pointer-events:none}
+.mpt{cursor:pointer}                                                       /* lone-frame marker */
+.mptglow{width:14px;height:14px;border-radius:50%;cursor:pointer;
+  background:radial-gradient(circle at 50% 42%,#f3bd5f 0%,#E0962B 50%,rgba(186,117,23,0) 100%);
+  box-shadow:0 0 11px 4px rgba(224,150,43,.4)}
+.mptglow.sel{background:radial-gradient(circle at 50% 42%,#fff 0%,#f3ede1 50%,rgba(255,255,255,0) 100%);box-shadow:0 0 0 2px #fff,0 0 12px 4px rgba(255,255,255,.5)}
+/* Leaflet zoom control, dark to match (base overrides already set below) */
+.leaflet-control-zoom{border:1px solid var(--line)!important;box-shadow:0 6px 18px -6px #000a!important;margin:14px!important}
+.leaflet-control-attribution{background:rgba(20,17,12,.7)!important;color:var(--faint)!important;font-family:var(--mo);font-size:9px}
+.leaflet-control-attribution a{color:var(--mut)!important}
+@media (prefers-reduced-motion:reduce){.mcl,.mcl:hover,.plmaplink{transition:none;transform:none}
+  .mapcard{transition:none;transform:none}}
+@media (max-width:680px){.mappanel{width:200px;top:10px;left:10px;padding:11px}.mapnote{display:none}}
+@media (max-width:620px){.mapcard{width:auto;left:8px;right:8px;bottom:8px}.mapcard.show{transform:none}
+  .mapcard{transform:translateY(20px)} .mcthumbs{grid-template-columns:repeat(6,1fr)}}
+/* ===================== The Cutting Room — explained cut overview ===================== */
+#cuttingview{position:fixed;top:var(--gbar-h);left:0;right:0;bottom:0;z-index:45;background:var(--bg);display:none;flex-direction:column;overflow-y:auto}
+#cuttingview.on{display:flex}
+.crscroll{flex:1;overflow:auto;background:radial-gradient(120% 70% at 50% -8%,#1d1810,var(--bg) 60%)}
+.crwrap{max-width:1180px;margin:0 auto;padding:30px 24px 60px}
+.crhead{max-width:74ch;margin:0 0 30px}
+.creyebrow{font-family:var(--mo);font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--amber);
+  display:inline-flex;align-items:center;gap:9px;margin:0 0 16px}
+.creyebrow::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--amber);box-shadow:0 0 10px 2px rgba(186,117,23,.5)}
+.crh1{font-family:var(--hd);font-weight:500;font-size:clamp(30px,5vw,46px);line-height:1.04;letter-spacing:-.01em;margin:0 0 16px;color:var(--ink)}
+.crh1 em{font-style:italic;color:var(--keep)}                  /* reassurance, in keep-green */
+.crintro{font-family:var(--bd);font-size:17px;line-height:1.6;color:var(--mut);margin:0}
+.crstats{display:flex;flex-wrap:wrap;gap:6px 26px;margin-top:24px;padding-top:18px;border-top:1px solid var(--line);
+  font-family:var(--mo);font-size:13px;color:var(--mut)}
+.crstats .v{color:var(--ink);font-weight:500}.crstats .amber{color:var(--amber)}.crstats .g{color:var(--keep)}
+.crstats .st{white-space:nowrap}
+/* category cards */
+.crgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:18px}
+.crcard{display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);border-radius:13px;
+  padding:17px 18px 16px;transition:border-color .15s}
+.crcard:hover{border-color:#4a3a24}
+.crcard.amber{border-color:#5a3f1e;background:linear-gradient(#27201400,#2a201580),var(--panel);box-shadow:0 0 0 1px rgba(186,117,23,.25),0 14px 34px -16px rgba(186,117,23,.4)}
+.crtop{display:flex;align-items:center;gap:10px}
+.crbadge{font-family:var(--mo);font-size:12px;font-weight:600;color:var(--mut);background:#1a140d;border:1px solid var(--line);
+  border-radius:7px;padding:4px 9px;letter-spacing:.04em;flex:none}
+.crcard.amber .crbadge{color:#1a1207;background:var(--amber);border-color:var(--amber)}
+.crtitle{font-family:var(--hd);font-size:21px;color:var(--ink);line-height:1.05;flex:1;min-width:0}
+.crchip{font-family:var(--mo);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:11px;
+  border:1px solid var(--line);color:var(--mut);white-space:nowrap;flex:none}
+.crchip.high{color:#9be8b6;border-color:#2f5a3a;background:#15301f}      /* High confidence */
+.crchip.review{color:#f0d09a;border-color:#5a3f1e;background:#2a2015}     /* Review */
+.crcount{display:flex;align-items:baseline;gap:9px;margin:13px 0 9px;font-family:var(--mo)}
+.crcount b{font-family:var(--hd);font-weight:500;font-size:30px;color:var(--ink);line-height:1}
+.crcard.amber .crcount b{color:var(--lit)}
+.crcount .rc{font-size:12px;color:var(--mut)}
+.crexplain{font-family:var(--bd);font-style:italic;font-size:14.5px;line-height:1.5;color:var(--dim);margin:0 0 13px}
+/* nomination slip — the mono evidence block */
+.crslip{font-family:var(--mo);font-size:11px;line-height:1.5;color:var(--mut);background:#100d09;border:1px solid var(--line);
+  border-radius:8px;padding:10px 11px;margin:0 0 13px}
+.crslip .k{color:var(--faint);letter-spacing:.1em;font-size:9px;text-transform:uppercase;display:block;margin-bottom:2px}
+.crslip .r{color:var(--ink);display:block;margin-bottom:8px}.crslip .r:last-child{margin-bottom:0}
+/* contact-sheet preview strip */
+.crsheet{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin:0 0 14px}
+.crsheet img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:2px;background:#0c0a07;display:block}
+.crrev{margin-top:auto;font-family:var(--mo);font-size:12.5px;color:var(--mut);background:transparent;border:1px solid var(--line);
+  border-radius:8px;padding:10px;text-align:center;cursor:pointer;text-decoration:none;transition:.13s}
+.crrev:hover{color:var(--ink);background:#221b13;border-color:var(--amber)}
+.crcard.amber .crrev{color:#caa56a;border-color:#5a3f1e}.crcard.amber .crrev:hover{color:var(--lit);background:#2a2015;border-color:var(--amber)}
+@media (prefers-reduced-motion:reduce){.crcard,.crrev{transition:none}}
+@media (max-width:680px){.crwrap{padding:20px 14px 44px}.crgrid{grid-template-columns:1fr;gap:14px}.crstats{gap:6px 16px}}
+/* ===================== Calendar — 366-day completion overview ===================== */
+#calendarview{position:fixed;top:var(--gbar-h);left:0;right:0;bottom:0;z-index:45;background:var(--bg);display:none;flex-direction:column;overflow-y:auto}
+#calendarview.on{display:flex}
+.calgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
+.calmonth{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:14px 14px 10px}
+.calmonthlabel{font-family:var(--hd);font-size:15px;color:var(--ink);margin:0 0 10px}
+.caldays{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.calcell{aspect-ratio:1/1;border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;
+  background:#1a140d;border:1px solid var(--line);transition:transform .1s,border-color .1s}
+.calcell:hover{transform:translateY(-1px);border-color:var(--amber)}
+.calcell.untouched{opacity:.45}
+.calcell.in-progress{border-color:var(--amber);background:linear-gradient(#2a201580,#2a201580),#1a140d}
+.calcell.complete{border-color:var(--keep);background:linear-gradient(rgba(99,153,34,.22),rgba(99,153,34,.22)),#1a140d}
+.caldnum{font-family:var(--mo);font-size:11px;color:var(--mut)}
+.calcell.in-progress .caldnum{color:var(--amber)}
+.calcell.complete .caldnum{color:var(--keep)}
+@media (max-width:680px){.calgrid{grid-template-columns:1fr 1fr}}
+/* ---- "On This Day" — the Today view reuses the day grid (view='day'); this only
+   styles the date-nav strip and the year separators it adds when day.crossYear ---- */
+.todaynav{display:flex;align-items:center;gap:8px;padding:8px 16px;font-family:var(--mo);font-size:12px}
+.todaynav button{padding:4px 10px}
+.todaynav input[type=date]{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:4px 8px;font-family:var(--mo)}
+.yearhead{grid-column:1/-1;font-family:var(--hd);font-size:15px;color:var(--amber);margin:14px 0 2px;padding-top:8px;border-top:1px solid var(--line)}
+.yearhead:first-child{margin-top:0;padding-top:0;border-top:none}
+/* ---- Trip overview: travel-wrapped contact sheet ---- */
+/* ---- D12 / audit 9.1 the tripsheet is a side sheet ---------------------------
+   "Tripsheet overlay becomes an anchor-positioned side sheet rather than a modal --
+   the table stays visible behind it at 40% dim; you never lose the room."
+
+   It was a modal in every respect that matters: fixed to all four edges with an
+   opaque background, so opening a trip replaced the room rather than sitting beside
+   it, and closing it was the only way to see where you had been.
+
+   Below 700px there is no room to keep, so it goes back to filling the width -- a
+   360px-wide phone cannot show a side sheet and a table at once, and pretending
+   otherwise would leave both unusable. */
+#tripsheet{position:fixed;top:var(--gbar-h);right:0;bottom:0;left:auto;
+  width:min(760px,94vw);z-index:46;background:var(--bg);
+  border-left:1px solid var(--line);box-shadow:-20px 0 50px rgba(0,0,0,.5);
+  display:none;flex-direction:column;overflow-y:auto}
+@media (max-width:700px){#tripsheet{left:0;width:auto;border-left:none;box-shadow:none}}
+#tripsheet.on{display:flex}
+/* the room, still there behind it */
+/* 40% dim via brightness, NOT opacity. #placesview has an opaque background, and
+   opacity makes the whole layer translucent -- background included -- so the overview
+   underneath bled through and the trips table rendered as a double exposure with the
+   year carousel. brightness darkens the same amount while the layer stays opaque. */
+body:has(#tripsheet.on) #placesview{filter:brightness(.6);transition:filter .18s linear}
+@media (prefers-reduced-motion:reduce){body:has(#tripsheet.on) #placesview{transition:none}}
+#tripsheet.on{display:flex}
+.tsbar{display:flex;gap:12px;align-items:center;padding:8px 14px;border-bottom:1px solid var(--line)}
+.tsbar .plback{font-family:var(--mo);font-size:12px}
+#tsreview{font-family:var(--mo);font-size:12px}
+/* masthead = the cream travel wrapper */
+.tsmast{background:#efe7d6;color:#241d15;margin:14px;border-radius:4px;padding:16px 18px;position:relative;
+  box-shadow:0 2px 6px #0007,0 0 0 1px #0004}
+.tsmast .pm{position:absolute;top:14px;right:18px;width:64px;height:64px;border:2px solid #9c2f28;border-radius:50%;
+  color:#9c2f28;transform:rotate(-12deg);font-family:var(--mo);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:.82}
+.tsmast .pm b{font-size:16px;font-weight:700}.tsmast .pm i{font-size:9px;font-style:normal}
+.tsmast .city{font-family:var(--hd);font-size:30px;line-height:1.02}
+.tsmast .reg{font-family:var(--bd);font-size:15px;color:#5e533f;margin-top:1px}
+.tsmast .exif{font-family:var(--mo);font-size:11.5px;color:#6b5f4a;margin-top:11px;border-top:1px solid #cabfa9;padding-top:8px;display:flex;flex-wrap:wrap;gap:4px 14px}
+.tsmast .exif b{color:#241d15;font-weight:600}
+.tsmast .prog b.k{color:#3f7d4f}.tsmast .prog b.c{color:#a23a31}
+/* the contact sheet bench */
+.tssheet{flex:1;overflow:auto;padding:6px 14px 26px;background:var(--bg)}
+.strip{position:relative;margin:14px 0;background:#161210;border:1px solid #2a2118;border-radius:3px;
+  padding:14px 0;display:flex;align-items:center;min-height:122px}
+.strip .rail{position:absolute;left:0;right:0;height:9px;
+  background:repeating-linear-gradient(90deg,transparent 0 7px,#000 7px 9px,transparent 9px 18px);
+  /* sprocket holes */}
+.strip .rail.t{top:2px}.strip .rail.b{bottom:2px}
+.strip .rail::before{content:'';position:absolute;left:0;right:0;top:0;height:9px;
+  background:repeating-linear-gradient(90deg,#0000 0 4px,#3a2e22 4px 8px,#0000 8px 18px);opacity:.5}
+.strip .edge{position:absolute;top:1px;left:9px;font-family:var(--mo);font-size:8px;letter-spacing:.5px;color:var(--amber);opacity:.7}
+.strip .frames{display:flex;gap:6px;padding:0 10px;width:100%;justify-content:flex-start}
+.fcell{position:relative;flex:0 0 auto;cursor:pointer;background:#000;border-radius:2px;overflow:hidden;line-height:0}
+.fcell img{display:block;width:100%;height:100%;object-fit:cover}
+.fcell .fn{position:absolute;bottom:1px;right:3px;font-family:var(--mo);font-size:8px;color:#ffdca6;text-shadow:0 0 3px #000;line-height:1}
+.fcell.sel{box-shadow:inset 0 0 0 2px var(--amber)}
+.gmark{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.gmark.keep::before{content:'';width:76%;height:84%;border:3px solid #6ad08e;border-radius:50%;transform:rotate(-7deg);opacity:.92;box-shadow:0 0 4px #6ad08e77}
+.gmark.cut::before{content:'✕';color:#ef6a60;font-family:var(--hd);font-size:34px;font-weight:600;opacity:.95;text-shadow:0 0 5px #ef6a6066}
+/* the loupe */
+#tloupe{position:fixed;width:168px;height:168px;border-radius:50%;border:3px solid var(--amber);
+  box-shadow:0 0 0 1px #000,0 0 22px 6px rgba(186,117,23,.35),inset 0 0 18px #000a;
+  background-repeat:no-repeat;pointer-events:none;z-index:60;display:none}
+#tloupechip{position:absolute;left:50%;bottom:-26px;transform:translateX(-50%);white-space:nowrap;
+  font-family:var(--mo);font-size:10.5px;color:var(--ink);background:#15110dcc;border:1px solid var(--amber);border-radius:10px;padding:2px 8px}
+@media (prefers-reduced-motion:reduce){#tloupe{box-shadow:0 0 0 1px #000,0 0 10px 3px rgba(186,117,23,.3),inset 0 0 18px #000a}}
+@media (max-width:680px){.tsmast{margin:8px}.tssheet{padding:4px 8px 20px}#tloupe{display:none!important}}
+/* ---- Settings + Residences ---- */
+#settingsview{position:fixed;top:var(--gbar-h);left:0;right:0;bottom:0;z-index:47;background:var(--bg);display:none;flex-direction:column;overflow-y:auto}
+#settingsview.on{display:flex}
+.setbar{display:flex;gap:12px;align-items:center;padding:8px 14px;border-bottom:1px solid var(--line)}
+.setmain{flex:1;display:flex;min-height:0}
+.setnav{width:208px;flex:none;border-right:1px solid var(--line);background:var(--bg2);padding:10px 0;display:flex;flex-direction:column}
+.setnav-i{font-family:var(--bd);font-size:15px;color:var(--mut);padding:10px 18px;cursor:pointer;border-left:3px solid transparent}
+.setnav-i.on{color:var(--ink);border-left-color:var(--amber);background:#241d15}
+.setnav-i.dis{opacity:.45;cursor:default;display:flex;justify-content:space-between;align-items:center}
+.setnav-i.dis i{font-family:var(--mo);font-size:9px;font-style:normal;border:1px solid var(--line);border-radius:8px;padding:0 5px;color:var(--mut)}
+.setcontent{flex:1;overflow:auto;padding:24px 28px}
+.seth{font-family:var(--hd);font-size:24px;color:var(--ink)}
+.setsub{font-family:var(--bd);font-size:14px;color:var(--mut);margin:4px 0 18px}
+/* Nudity-screening settings section — muted; keeps the view's single amber on "Add residence" */
+.nsfwset{font-family:var(--mo);font-size:13px;color:var(--mut);max-width:640px;display:flex;flex-direction:column;gap:11px}
+.nsfwtoggle{display:flex;align-items:center;gap:9px;color:var(--ink);cursor:pointer}
+.nsfwtoggle input{accent-color:var(--mut);width:16px;height:16px;cursor:pointer}
+.nsfwsetsub{font-size:11.5px;color:var(--faint);line-height:1.45}
+.nsfwsetsub b{color:var(--ink);font-weight:500}
+.nsfwthrrow{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.nsfwthrrow input[type=range]{accent-color:var(--mut);flex:1;min-width:200px;max-width:440px;cursor:pointer}
+.nsfwsetlbl{color:var(--mut)} .nsfwsetlbl b{color:var(--ink)}
+.nsfwreviewlink{color:var(--ink);text-decoration:none;font-size:12px;border:1px solid var(--line);border-radius:6px;padding:7px 11px;align-self:flex-start;background:var(--panel)}
+.nsfwreviewlink:hover{border-color:#5a3f1e;color:var(--ink)}
+/* era timeline */
+.tl{position:relative;height:58px;background:var(--bg2);border:1px solid var(--line);border-radius:5px;margin:0 0 22px;overflow:hidden}
+.tl .seg{position:absolute;top:10px;height:24px;border-radius:3px;display:flex;align-items:center;padding:0 8px;
+  font-family:var(--mo);font-size:10.5px;color:#160f06;font-weight:600;white-space:nowrap;overflow:hidden}
+.tl .yr{position:absolute;bottom:3px;font-family:var(--mo);font-size:9px;color:var(--mut)}
+.tl .gap{position:absolute;top:10px;height:24px;background:repeating-linear-gradient(45deg,#0000 0 5px,#2a2118 5px 10px);border:1px dashed var(--line);border-radius:3px}
+/* residence cards */
+.rescards{display:flex;flex-direction:column;gap:12px;max-width:760px}
+.rescard{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:13px 15px;display:flex;align-items:flex-start;gap:13px}
+.rescard .sw{width:14px;height:14px;border-radius:3px;flex:none;margin-top:4px}
+.rescard .body{flex:1}
+.rescard .rl{font-family:var(--hd);font-size:18px;color:var(--ink)}
+.rescard .rd{font-family:var(--mo);font-size:11.5px;color:var(--mut);margin-top:2px}
+.rescard .chips{margin-top:8px;display:flex;flex-wrap:wrap;gap:5px}
+.rchip{font-family:var(--mo);font-size:11px;padding:2px 8px;border:1px solid var(--line);border-radius:11px;color:var(--ink);background:#241d15}
+.rescard .acts{display:flex;gap:8px}.rescard .acts button{font-family:var(--mo);font-size:11px;padding:4px 9px}
+.addres{margin-top:16px}
+/* edit modal */
+#resmodal{position:fixed;inset:0;z-index:55;background:#0009;display:none;align-items:center;justify-content:center}
+#resmodal.on{display:flex}
+.resform{background:var(--bg2);border:1px solid var(--line);border-radius:8px;padding:20px 22px;width:min(540px,92vw);max-height:88vh;overflow:auto}
+.resform h3{font-family:var(--hd);font-size:20px;color:var(--ink);margin:0 0 14px}
+.resform label{display:block;font-family:var(--mo);font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.06em;margin:13px 0 5px}
+.resform input[type=text],.resform input[type=month],.resform input[type=number]{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--ink);font-family:var(--bd);font-size:14px;padding:7px 9px;border-radius:4px;box-sizing:border-box}
+.resrow{display:flex;gap:14px}.resrow>div{flex:1}
+.resform .present{display:flex;gap:6px;align-items:center;font-family:var(--mo);font-size:12px;color:var(--ink);text-transform:none;letter-spacing:0;margin-top:8px}
+.atype{position:relative}
+.achips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px}
+.achip{font-family:var(--mo);font-size:11px;padding:2px 6px 2px 8px;border:1px solid var(--amber);border-radius:11px;color:#f0d9b3;background:#2a2015;display:flex;gap:5px;align-items:center}
+.achip b{cursor:pointer;color:var(--mut);font-weight:400}
+.adrop{position:absolute;left:0;right:0;top:100%;background:var(--panel);border:1px solid var(--line);border-radius:4px;max-height:200px;overflow:auto;z-index:5;display:none}
+.adrop.on{display:block}
+.adrop div{font-family:var(--mo);font-size:12px;padding:6px 9px;cursor:pointer;color:var(--ink);display:flex;justify-content:space-between}
+.adrop div:hover{background:#241d15}.adrop div .ct{color:var(--mut)}
+.resfoot{display:flex;gap:9px;justify-content:flex-end;margin-top:20px}
+@media (max-width:680px){.setnav{width:130px}.resrow{flex-direction:column;gap:0}}
+/* ---- Vault (lock/safe identity; distinct from keep/cut) ---- */
+.bvault{background:#1c2630;border-color:#5e7790;color:#a8c6dc}
+#fvault.on{background:#3a2f12;border-color:var(--amber);color:#f0d9b3}
+#vaultview{position:fixed;top:var(--gbar-h);left:0;right:0;bottom:0;z-index:47;background:var(--bg);display:none;flex-direction:column;overflow-y:auto}
+#vaultview.on{display:flex}
+#vaultgrid{flex:1;overflow:auto;padding:16px}
+.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;align-content:start}
+#vaultgrid .tile .unvault{position:absolute;top:5px;right:5px;font-family:var(--mo);font-size:10px;padding:3px 7px;background:#000b;border:1px solid #5e7790;color:#a8c6dc;border-radius:4px;cursor:pointer}
+.vempty{color:var(--mut);font-family:var(--bd);font-size:15px;padding:40px;max-width:540px;line-height:1.5}
+.vempty b{color:var(--amber)}
+/* ---- Search (Stage 5 4c-ii: text -> SigLIP2 NN, flag-gated) ---- */
+#searchview{position:fixed;top:var(--gbar-h);left:0;right:0;bottom:0;z-index:47;background:var(--bg);display:none;flex-direction:column;overflow-y:auto}
+#searchview.on{display:flex}
+#searchview #searchq{flex:0 1 420px;background:var(--bg);border:1px solid var(--line);color:var(--ink);font-family:var(--bd);font-size:14px;padding:7px 9px;border-radius:4px;box-sizing:border-box}
+#searchview #searchq:focus{outline:none;border-color:var(--amber)}
+#searchstatus{font-family:var(--mo);font-size:11px}
+#searchall{display:flex;align-items:center;gap:6px;color:var(--mut);font-family:var(--mo);font-size:11px;cursor:pointer;white-space:nowrap}
+#searchall input{accent-color:var(--mut);width:13px;height:13px;cursor:pointer}
+#searchview .grid{padding:16px}
+/* ---- NSFW owner review console (calibration surface; one amber accent = the slider) ---- */
+#nsfwview{position:fixed;top:var(--gbar-h);left:0;right:0;bottom:0;z-index:47;background:var(--bg);display:none;flex-direction:column;overflow-y:auto}
+#nsfwview.on{display:flex}
+.nsfwtabs{display:flex;gap:8px;padding:10px 14px 0}
+.nsfwtab{font-family:var(--mo);font-size:12px;padding:6px 13px;border:1px solid var(--line);border-radius:14px 14px 0 0;border-bottom:none;background:none;color:var(--mut);cursor:pointer}
+.nsfwtab.on{color:var(--ink);border-color:var(--amber);background:#2a2015}
+.nsfwctl{display:flex;align-items:center;gap:14px;padding:12px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.nsfwctl input[type=range]{accent-color:var(--amber);flex:1;min-width:200px;max-width:440px;cursor:pointer}
+.nsfwthrlbl{font-family:var(--mo);font-size:12px;color:var(--mut)}
+.nsfwthrlbl b{color:var(--ink)}
+.nsfwsummary{font-family:var(--mo);font-size:12px;color:var(--mut)}
+#nsfwgrid{padding:10px}
+#nsfwgrid .tile .nsfwclear{position:absolute;top:5px;right:5px;font-family:var(--mo);font-size:10px;padding:3px 7px;background:#000b;border:1px solid #5e7790;color:#a8c6dc;border-radius:4px;cursor:pointer}
+#nsfwgrid .tile .nsfwscore{position:absolute;top:5px;left:5px;font-family:var(--mo);font-size:10px;padding:3px 7px;background:#000b;border:1px solid var(--line);color:var(--ink);border-radius:4px}
+/* Closed Set reveal-gate: the grid region blurs (unreadable + non-interactive) behind a centered
+   explainer until the owner clicks Reveal. Back-bar + threshold control stay clear above the gate. */
+#nsfwstage{position:relative;flex:1;min-height:0;display:flex;flex-direction:column}
+#nsfwstage>#nsfwgrid{flex:1;min-height:0;overflow:auto}
+#nsfwgrid.blurred{filter:blur(24px);pointer-events:none;user-select:none;-webkit-user-select:none}
+#nsfwgate{position:absolute;inset:0;z-index:5;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(11,9,7,.72);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+#nsfwgate.on{display:flex}
+.nsfwgatecard{max-width:460px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:24px 26px;box-shadow:0 18px 48px rgba(0,0,0,.55)}
+.nsfwgatetitle{font-family:var(--hd);font-size:22px;color:var(--ink);margin-bottom:10px}
+.nsfwgatebody{font-family:var(--bd);font-size:14px;line-height:1.55;color:var(--mut);margin:0 0 18px}
+.nsfwgatebtns{display:flex;gap:10px;align-items:center}
+.nsfwgatereveal{background:var(--amber);color:#1a1207;border:1px solid var(--amber);font-weight:600;font-family:var(--mo);font-size:13px;padding:9px 16px;border-radius:8px;cursor:pointer}
+.nsfwgatereveal:hover{background:var(--lit);border-color:var(--lit)}
+.nsfwgateback{background:transparent;color:var(--mut);border:1px solid var(--line);font-family:var(--mo);font-size:13px;padding:9px 16px;border-radius:8px;cursor:pointer}
+.nsfwgateback:hover{color:var(--ink);border-color:var(--mut)}
+/* ===================== People (Faces, phase 1) ===================== */
+#peopleview{position:fixed;top:var(--gbar-h);left:0;right:0;bottom:0;z-index:45;background:var(--bg);display:none;flex-direction:column;overflow-y:auto}
+#peopleview.on{display:flex}
+#peoplebody{flex:1;overflow:auto;padding:16px}
+.pplgrid{grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:14px;align-content:start;padding:4px 2px}
+.pcard{cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:7px;padding:10px 6px;border:1px solid #2a2218;border-radius:9px;background:#16120c;transition:border-color .15s,transform .1s}
+.pcard:hover{border-color:var(--amber);transform:translateY(-1px)}
+.pcard .pava{width:96px;height:96px;border-radius:50%;object-fit:cover;background:#0a0805;border:1px solid #3a3024}
+.pcard .pava.none{display:flex;align-items:center;justify-content:center;color:#5e5240;font-family:var(--mo);font-size:24px}
+.pcard .pname{font-family:var(--bd);font-size:14px;color:#e6e2d5;text-align:center;line-height:1.2}
+.pcard .pmeta{font-family:var(--mo);font-size:10.5px;color:var(--mut)}
+.pcard .pmeta b{color:var(--amber)}
+#persondetail{display:none;margin-top:8px}#persondetail.on{display:block}
+.pdsection{margin:14px 0 6px}
+.pdhdr{font-family:var(--bd);font-size:14px;color:#e6e2d5;margin:8px 2px 10px;display:flex;align-items:baseline;gap:9px}
+.pdhdr i{font-family:var(--mo);font-size:10.5px;color:var(--mut);font-style:normal}
+.facegrid{grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:9px;align-content:start;padding:2px}
+.fcell{position:relative;border-radius:7px;overflow:hidden;background:#0a0805;border:1px solid #2a2218;aspect-ratio:1}
+.fcell img{width:100%;height:100%;object-fit:cover;display:block;cursor:pointer}
+.fcell .fsc{position:absolute;left:0;right:0;bottom:0;font-family:var(--mo);font-size:10px;padding:2px 4px;background:linear-gradient(transparent,#000c);color:#dfe9c8;text-align:center}
+.fcell .fsc.hi{color:#9fe0a0}.fcell .fsc.lo{color:#e0a06f}
+.pdcap{color:var(--mut);font-family:var(--bd);font-size:14px;padding:18px 6px;max-width:560px;line-height:1.5}
+.pdsugctl{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:0 2px 12px;font-family:var(--mo);font-size:12px;color:var(--mut)}
+.pdsugctl input{background:#0a0805;border:1px solid #3a3024;color:#e6e2d5;border-radius:4px;padding:3px 5px;font-family:var(--mo)}
+.pdsugctl button{font-family:var(--mo);font-size:11.5px;padding:4px 9px;background:#1a1510;border:1px solid #3a3024;color:#cfc7b6;border-radius:5px;cursor:pointer}
+.pdsugctl button:hover{border-color:var(--amber);color:#f0d9b3}
+.pdsugctl button.sugbulk{background:#24320f;border-color:#5a7a2a;color:#cfe0a0}
+.pdsugctl button.sugbulk:hover{background:#2e3f14;border-color:#7fae3a}
+.fcell .facts{position:absolute;top:0;right:0;display:flex;gap:2px;padding:3px;opacity:0;transition:opacity .12s}
+.fcell:hover .facts{opacity:1}
+.fcell .facts button{width:24px;height:24px;border-radius:5px;border:1px solid #0008;font-size:13px;line-height:1;cursor:pointer;padding:0}
+.fcell .facts .fy{background:#2f7d32cc;color:#eaffea}
+.fcell .facts .fn{background:#a23b3bcc;color:#ffeaea}
+.fcell.confirmed{outline:2px solid var(--amber);outline-offset:-2px}
+.fcell.confirmed .fsc{color:#f0d9b3}
+/* ---- People to name (stage 1b): unnamed-cluster naming cards ---- */
+#namebox{margin:2px 0 18px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.nbgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;align-content:start;padding:2px}
+.nbcard{position:relative;display:flex;flex-direction:column;gap:8px;padding:10px;border:1px solid #2a2218;border-radius:9px;background:#16120c;transition:border-color .15s}
+.nbcard:hover{border-color:#3a3024}
+.nbfaces{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.nbfaces img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:6px;background:#0a0805;border:1px solid #2a2218;display:block}
+.nbstat{font-family:var(--mo);font-size:11px;color:var(--mut)}
+.nbstat b{color:var(--ink);font-weight:600}
+.nbspan{font-family:var(--mo);font-size:10px;color:#5e5240;margin-top:-4px}
+.nbrow{display:flex;gap:6px;position:relative}
+.nbac{position:absolute;left:0;right:0;top:calc(100% + 3px);z-index:70;display:none;background:#0f0c07;border:1px solid #3a3024;border-radius:7px;max-height:176px;overflow-y:auto;box-shadow:0 6px 18px #000c}
+.nbacit{padding:6px 9px;font-family:var(--bd);font-size:13px;color:#e6e2d5;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nbacit:hover,.nbacit.on{background:#24320f;color:#cfe0a0}
+.nbrow input{flex:1;min-width:0;background:#0a0805;border:1px solid #3a3024;color:#e6e2d5;border-radius:6px;padding:6px 8px;font-family:var(--bd);font-size:13px}
+.nbrow input::placeholder{color:#5e5240}
+.nbrow input:focus{outline:none;border-color:var(--keep)}
+.nbrow .nbgo{font-family:var(--mo);font-size:11.5px;padding:6px 12px;background:#24320f;border:1px solid #5a7a2a;color:#cfe0a0;border-radius:6px;cursor:pointer}
+.nbrow .nbgo:hover{background:#2e3f14;border-color:#7fae3a}
+.nbrow .nbgo:disabled{opacity:.55;cursor:default}
+.nberr{font-family:var(--mo);font-size:10.5px;color:#e0876f;line-height:1.35}
+.nberr:empty{display:none}
+.nbskip{position:absolute;top:6px;right:6px;font-family:var(--mo);font-size:10px;padding:3px 7px;background:#000000a6;border:1px solid transparent;color:#9c8b76;border-radius:5px;cursor:pointer;opacity:0;transition:opacity .12s}
+.nbcard:hover .nbskip,.nbskip:focus-visible{opacity:1}
+.nbskip:hover{color:#e6e2d5;border-color:#3a3024}
+@media (max-width:620px){.nbgrid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}.nbskip{opacity:1}}
+
+/* ============================================================
+   LOUPE · LIQUID GLASS + WARM LIGHT TABLE — CULLING APP
+   ------------------------------------------------------------
+   A MATERIAL-ONLY layer. No markup, structure, copy, or color
+   tokens change — only the material of the chrome + working
+   surfaces. Everything is gated behind `html.loupe-glass`.
+
+   APPLY:   add class "loupe-glass" to the <html> element, and
+            load this file AFTER the host stylesheet.
+   REVERT:  remove the "loupe-glass" class (this layer goes
+            dormant instantly — zero effect, nothing to undo).
+   INTENSITY (optional): set data-glass="subtle" | "full" on
+            <html>; default (unset) = balanced.
+   ============================================================ */
+
+/* Token fallbacks — so this layer is self-contained even if the host
+   stylesheet names its tokens differently. Values are the canonical
+   Darkroom palette; safe to delete any the host already defines. */
+html.loupe-glass{
+  --amber:#BA7517; --lit:#E2902A; --ink:#E9E4D6; --dim:#A79E8C;
+  --faint:#766C5A; --keep:#639922; --cut:#B0463E;
+  --surface-hover:#2A2015; --line:#3A3024;
+  --mo:'JetBrains Mono',ui-monospace,monospace;
+}
+
+/* ============================================================
+   LIQUID GLASS CHROME LAYER
+   Floating chrome (header, toolbars, sidebars, focus panel, bars,
+   badges) is rematerialised as translucent refracting glass while
+   the photograph stays the brightest thing on screen. Colors,
+   structure, and the one-amber-per-view rule are unchanged — only
+   the MATERIAL of the chrome changes. Three live intensity presets
+   are selectable via html[data-glass]. Default = balanced.
+   ============================================================ */
+html.loupe-glass{
+  /* balanced preset (default) */
+  --g-blur:18px; --g-sat:1.45;
+  --g-bg:rgba(28,22,15,0.56);
+  --g-bg-2:rgba(34,27,18,0.62);
+  --g-bg-deep:rgba(18,14,9,0.66);
+  --g-border:rgba(247,240,224,0.13);
+  --g-rim:inset 0 1px 0 rgba(251,246,234,0.16), inset 0 -1px 0 rgba(0,0,0,0.34);
+  --g-shadow:0 12px 34px rgba(0,0,0,0.5);
+  --g-sheen:linear-gradient(180deg,rgba(251,246,234,0.07) 0%,rgba(251,246,234,0.015) 16%,transparent 60%);
+  /* amber as a glowing liquid-glass element */
+  --g-amber-bg:rgba(186,117,23,0.30);
+  --g-amber-border:rgba(232,165,70,0.62);
+  --g-amber-rim:inset 0 1px 0 rgba(255,224,166,0.45), inset 0 -1px 0 rgba(120,70,8,0.5);
+  --g-amber-glow:0 0 0 1px rgba(232,165,70,0.32), 0 0 22px rgba(226,144,42,0.42), 0 8px 24px rgba(0,0,0,0.45);
+}
+
+html.loupe-glass[data-glass="subtle"]{
+  --g-blur:9px; --g-sat:1.2;
+  --g-bg:rgba(26,21,15,0.74);
+  --g-bg-2:rgba(32,26,18,0.78);
+  --g-bg-deep:rgba(18,14,9,0.8);
+  --g-border:rgba(247,240,224,0.09);
+  --g-rim:inset 0 1px 0 rgba(251,246,234,0.10), inset 0 -1px 0 rgba(0,0,0,0.26);
+  --g-shadow:0 8px 22px rgba(0,0,0,0.44);
+  --g-sheen:linear-gradient(180deg,rgba(251,246,234,0.035) 0%,transparent 50%);
+  --g-amber-bg:rgba(186,117,23,0.22);
+  --g-amber-border:rgba(232,165,70,0.5);
+  --g-amber-rim:inset 0 1px 0 rgba(255,224,166,0.28);
+  --g-amber-glow:0 0 0 1px rgba(232,165,70,0.26), 0 0 12px rgba(226,144,42,0.26), 0 6px 18px rgba(0,0,0,0.4);
+}
+
+html.loupe-glass[data-glass="full"]{
+  --g-blur:32px; --g-sat:1.8;
+  --g-bg:rgba(30,24,16,0.40);
+  --g-bg-2:rgba(38,30,20,0.46);
+  --g-bg-deep:rgba(18,14,9,0.5);
+  --g-border:rgba(247,240,224,0.20);
+  --g-rim:inset 0 1.5px 0 rgba(251,246,234,0.26), inset 0 0 0 1px rgba(251,246,234,0.05), inset 0 -1px 0 rgba(0,0,0,0.4);
+  --g-shadow:0 18px 48px rgba(0,0,0,0.58);
+  --g-sheen:linear-gradient(180deg,rgba(251,246,234,0.12) 0%,rgba(251,246,234,0.03) 22%,transparent 55%,rgba(0,0,0,0.05) 100%);
+  --g-amber-bg:rgba(186,117,23,0.34);
+  --g-amber-border:rgba(232,165,70,0.78);
+  --g-amber-rim:inset 0 1.5px 0 rgba(255,228,176,0.6), inset 0 -1px 0 rgba(120,70,8,0.55);
+  --g-amber-glow:0 0 0 1px rgba(232,165,70,0.4), 0 0 34px rgba(226,144,42,0.55), 0 10px 30px rgba(0,0,0,0.5);
+}
+
+
+/* reusable glass surface mixin via a custom class hook + direct overrides */
+html.loupe-glass .gl{
+  background:var(--g-bg);
+  -webkit-backdrop-filter:blur(var(--g-blur)) saturate(var(--g-sat));
+  backdrop-filter:blur(var(--g-blur)) saturate(var(--g-sat));
+  border:1px solid var(--g-border);
+  box-shadow:var(--g-rim),var(--g-shadow);
+}
+
+
+/* ---------- header ---------- */
+html.loupe-glass header#top{
+  background:var(--g-bg);
+  -webkit-backdrop-filter:blur(var(--g-blur)) saturate(var(--g-sat));
+  backdrop-filter:blur(var(--g-blur)) saturate(var(--g-sat));
+  border-bottom:1px solid var(--g-border);
+  box-shadow:var(--g-rim),0 8px 28px rgba(0,0,0,0.42);
+  position:fixed;   /* must match the base header#top rule; this more-specific glass rule otherwise re-asserts sticky */
+}
+
+html.loupe-glass header#top::before{content:"";position:absolute;inset:0;pointer-events:none;background:var(--g-sheen)}
+
+html.loupe-glass header#top>*{position:relative}
+
+
+/* nav buttons → glass pills; active = glowing amber glass */
+html.loupe-glass .navbtn{
+  background:var(--g-bg-2);
+  -webkit-backdrop-filter:blur(calc(var(--g-blur) * .7)) saturate(var(--g-sat));
+  backdrop-filter:blur(calc(var(--g-blur) * .7)) saturate(var(--g-sat));
+  border:1px solid var(--g-border);
+  border-radius:999px;
+  box-shadow:var(--g-rim);
+}
+
+html.loupe-glass .navbtn:hover{background:var(--surface-hover);border-color:var(--g-amber-border);color:var(--ink)}
+
+html.loupe-glass .navbtn.navon{
+  color:#ffdca6;
+  background:var(--g-amber-bg);
+  border:1px solid var(--g-amber-border);
+  box-shadow:var(--g-amber-rim),var(--g-amber-glow);
+}
+
+
+/* breadcrumb current = glass lozenge */
+html.loupe-glass .crumb .cur{
+  background:var(--g-bg-2);
+  -webkit-backdrop-filter:blur(10px) saturate(var(--g-sat));
+  backdrop-filter:blur(10px) saturate(var(--g-sat));
+  border:1px solid var(--g-border);
+  border-radius:999px;
+  box-shadow:var(--g-rim);
+}
+
+html.loupe-glass .crumb a:hover{background:var(--g-bg-2)}
+
+
+/* ---------- shared toolbar ---------- */
+html.loupe-glass .tb,
+html.loupe-glass .tbsel,
+html.loupe-glass .chip{
+  background:var(--g-bg-2);
+  -webkit-backdrop-filter:blur(calc(var(--g-blur) * .7)) saturate(var(--g-sat));
+  backdrop-filter:blur(calc(var(--g-blur) * .7)) saturate(var(--g-sat));
+  border:1px solid var(--g-border);
+  border-radius:999px;
+  box-shadow:var(--g-rim);
+}
+
+html.loupe-glass .tb:hover,
+html.loupe-glass .chip:hover{border-color:var(--g-amber-border)}
+
+html.loupe-glass .tb.amber{
+  color:#ffdca6;
+  background:var(--g-amber-bg);
+  border:1px solid var(--g-amber-border);
+  box-shadow:var(--g-amber-rim),var(--g-amber-glow);
+}
+
+html.loupe-glass .tb.green{
+  color:#bdf3cf;
+  background:rgba(99,153,34,0.24);
+  border:1px solid rgba(124,181,52,0.6);
+  box-shadow:inset 0 1px 0 rgba(190,240,170,0.4),0 0 18px rgba(99,153,34,0.32),0 8px 22px rgba(0,0,0,0.4);
+}
+
+
+/* ---------- focus panel ---------- */
+html.loupe-glass .focus{background:rgba(8,7,5,0.72);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+
+html.loupe-glass .fhead{
+  background:var(--g-bg);
+  -webkit-backdrop-filter:blur(var(--g-blur)) saturate(var(--g-sat));
+  backdrop-filter:blur(var(--g-blur)) saturate(var(--g-sat));
+  border-bottom:1px solid var(--g-border);
+  box-shadow:var(--g-rim);
+}
+
+html.loupe-glass .fhead button{background:var(--g-bg-2);border:1px solid var(--g-border);border-radius:999px;box-shadow:var(--g-rim)}
+
+html.loupe-glass .fhead button:hover{border-color:var(--g-amber-border)}
+
+html.loupe-glass .meta{
+  position:relative;
+  background:var(--g-bg);
+  -webkit-backdrop-filter:blur(var(--g-blur)) saturate(var(--g-sat));
+  backdrop-filter:blur(var(--g-blur)) saturate(var(--g-sat));
+  border-left:1px solid var(--g-border);
+  box-shadow:var(--g-rim);
+}
+
+html.loupe-glass .meta::before{content:"";position:absolute;inset:0;pointer-events:none;background:var(--g-sheen)}
+
+html.loupe-glass .meta>*{position:relative}
+
+html.loupe-glass .acts{
+  background:var(--g-bg-deep);
+  -webkit-backdrop-filter:blur(var(--g-blur)) saturate(var(--g-sat));
+  backdrop-filter:blur(var(--g-blur)) saturate(var(--g-sat));
+  border-top:1px solid var(--g-border);
+  box-shadow:var(--g-rim);
+}
+
+html.loupe-glass .acts button{background:var(--g-bg-2);border:1px solid var(--g-border);border-radius:12px;box-shadow:var(--g-rim)}
+
+html.loupe-glass .acts button:hover{border-color:var(--g-amber-border)}
+
+html.loupe-glass .bcut{background:rgba(176,70,62,0.26);border:1px solid rgba(214,110,100,0.62);color:#ff9a8f;box-shadow:inset 0 1px 0 rgba(255,180,170,0.35),0 0 16px rgba(176,70,62,0.3)}
+
+html.loupe-glass .bkeep{background:rgba(99,153,34,0.26);border:1px solid rgba(124,181,52,0.62);color:#9be8b6;box-shadow:inset 0 1px 0 rgba(190,240,170,0.4),0 0 16px rgba(99,153,34,0.3)}
+
+html.loupe-glass .pctbox{background:var(--g-bg-deep);border:1px solid var(--g-border);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+
+
+/* ---------- overlay bars + side panels (cutting/map/trips/people/settings) ---------- */
+html.loupe-glass .mapbar,
+html.loupe-glass .plbar,
+html.loupe-glass .setbar,
+html.loupe-glass .setbar.top{
+  background:var(--g-bg);
+  -webkit-backdrop-filter:blur(var(--g-blur)) saturate(var(--g-sat));
+  backdrop-filter:blur(var(--g-blur)) saturate(var(--g-sat));
+  border-bottom:1px solid var(--g-border);
+  box-shadow:var(--g-rim);
+}
+
+html.loupe-glass .mappanel,
+html.loupe-glass .setnav{
+  background:var(--g-bg);
+  -webkit-backdrop-filter:blur(var(--g-blur)) saturate(var(--g-sat));
+  backdrop-filter:blur(var(--g-blur)) saturate(var(--g-sat));
+  border-left:1px solid var(--g-border);
+  box-shadow:var(--g-rim);
+}
+
+html.loupe-glass .setnav{border-left:none;border-right:1px solid var(--g-border)}
+
+html.loupe-glass .plback{
+  background:var(--g-bg-2);
+  -webkit-backdrop-filter:blur(10px) saturate(var(--g-sat));
+  backdrop-filter:blur(10px) saturate(var(--g-sat));
+  border:1px solid var(--g-border);border-radius:999px;box-shadow:var(--g-rim);
+}
+
+html.loupe-glass .plback:hover{border-color:var(--g-amber-border)}
+
+html.loupe-glass .plmaplink{
+  background:var(--g-amber-bg);border:1px solid var(--g-amber-border);border-radius:999px;
+  box-shadow:var(--g-amber-rim),var(--g-amber-glow);color:#ffdca6;
+}
+
+html.loupe-glass .setnav-i.on{
+  background:var(--g-amber-bg);border-left:2px solid var(--g-amber-border);border-radius:8px;
+  box-shadow:var(--g-amber-rim),0 0 16px rgba(226,144,42,0.3);color:#ffdca6;
+}
+
+html.loupe-glass .resbtn,
+html.loupe-glass .pdsugctl button{
+  background:var(--g-bg-2);
+  -webkit-backdrop-filter:blur(8px) saturate(var(--g-sat));
+  backdrop-filter:blur(8px) saturate(var(--g-sat));
+  border:1px solid var(--g-border);border-radius:999px;box-shadow:var(--g-rim);
+}
+
+html.loupe-glass .resbtn:hover,
+html.loupe-glass .pdsugctl button:hover{border-color:var(--g-amber-border)}
+
+
+/* primary amber CTAs → solid glowing amber glass */
+html.loupe-glass .resadd,
+html.loupe-glass .mcopen,
+html.loupe-glass .tb.amber{position:relative}
+
+html.loupe-glass .resadd,
+html.loupe-glass .mcopen{
+  background:var(--g-amber-bg);color:#ffdca6;
+  border:1px solid var(--g-amber-border);
+  -webkit-backdrop-filter:blur(10px) saturate(1.5);
+  backdrop-filter:blur(10px) saturate(1.5);
+  box-shadow:var(--g-amber-rim),var(--g-amber-glow);
+}
+
+html.loupe-glass .resadd:hover,
+html.loupe-glass .mcopen:hover{background:rgba(226,144,42,0.4)}
+
+
+/* ---------- badges → frosted chips ---------- */
+html.loupe-glass .b-pip{
+  background:var(--g-bg-deep);
+  -webkit-backdrop-filter:blur(7px) saturate(var(--g-sat));
+  backdrop-filter:blur(7px) saturate(var(--g-sat));
+  box-shadow:var(--g-rim);
+}
+
+html.loupe-glass .b-live{
+  background:var(--g-amber-bg);
+  -webkit-backdrop-filter:blur(7px) saturate(var(--g-sat));
+  backdrop-filter:blur(7px) saturate(var(--g-sat));
+  border:1px solid var(--g-amber-border);
+  box-shadow:var(--g-amber-rim),0 0 14px rgba(226,144,42,0.32);
+  color:#ffdca6;
+}
+
+html.loupe-glass .crbadge{
+  background:var(--g-bg-deep);
+  -webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);
+  border:1px solid var(--g-border);box-shadow:var(--g-rim);
+}
+
+html.loupe-glass .crchip{
+  -webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);
+  border:1px solid var(--g-border);box-shadow:var(--g-rim);
+}
+
+
+/* ============================================================
+   LIGHT TABLE — the working surface (Day grid + Focus stage)
+   The surface itself becomes a luminous warm frosted panel; frames
+   sit on it as backlit slides; the glass apparatus (toolbars, meta
+   panel, decision buttons) rests on top. Warm, in-palette only.
+   Scoped to .grid/.tile (Day) and .focus .stage (Focus) so Overview,
+   Month/Week, and the overlays stay grounded in charcoal.
+   ============================================================ */
+
+/* the table slab */
+html.loupe-glass .grid{
+  background:linear-gradient(180deg,#f8efda 0%,#efe2c7 52%,#e4d6b8 100%);
+  border:1px solid rgba(255,250,240,0.5);
+  border-radius:16px;
+  padding:18px;
+  gap:14px;
+  box-shadow:inset 0 2px 0 rgba(255,255,255,0.7),inset 0 0 0 1px rgba(255,250,238,0.32),inset 0 -34px 70px rgba(120,100,66,0.1),0 30px 70px rgba(0,0,0,0.5);
+}
+
+/* frames become backlit slides — thin cream mount, photo stays the hero */
+html.loupe-glass .tile{
+  background:#fbf6ea;
+  border:1px solid rgba(40,30,16,0.16);
+  border-radius:4px;
+  padding:5px 5px 0;
+  box-shadow:0 9px 20px rgba(40,28,12,0.28),0 1px 0 rgba(255,255,255,0.7);
+  overflow:visible;
+}
+
+html.loupe-glass .tile img{border-radius:2px;height:140px}
+
+html.loupe-glass .tile:hover{border-color:var(--amber);box-shadow:0 12px 26px rgba(40,28,12,0.34),0 0 0 1px var(--amber)}
+
+html.loupe-glass .tile.keep{border-color:var(--keep);box-shadow:0 9px 20px rgba(40,28,12,0.28),0 0 0 1px var(--keep)}
+
+html.loupe-glass .tile.cut{opacity:1;border-color:rgba(176,70,62,0.55)}
+
+html.loupe-glass .tile.cut img{filter:grayscale(0.55) brightness(0.74)}
+
+html.loupe-glass .tcap{color:#5e533f}
+
+/* keep the dark-chip badges legible as instruments resting on bright slides */
+html.loupe-glass .b-pip{background:rgba(20,15,8,0.82)}
+
+
+/* focus stage = a lit table; the photo is a mounted slide on it */
+html.loupe-glass .focus{background:radial-gradient(120% 90% at 50% 0%,#161009 0%,#0c0906 60%,#0b0805 100%)}
+
+html.loupe-glass .stage{
+  background:radial-gradient(70% 76% at 50% 44%,#e8d9ba 0%,#d6c49f 58%,#c0ad87 100%);
+}
+
+html.loupe-glass .stage img{
+  border:11px solid #fdfbf4;
+  border-radius:3px;
+  background:#fdfbf4;
+  box-shadow:0 32px 72px rgba(0,0,0,0.62),0 0 0 1px rgba(40,30,16,0.26);
+}
+
+
+/* ---------- intensity switcher (floating, the app's lone control chrome) ---------- */
+
+
+
+
+
+
+/* ============================================================================
+   Focus controls — glass pills, vault identity, active states, relocated overlays
+   Gated additions/overrides (appended after the base layer so they win on order).
+   ============================================================================ */
+
+/* A1 — true pills for the decision bar (override the layer's 12px) */
+html.loupe-glass .acts button{border-radius:999px}
+
+/* A2 — vault identity: a quiet cool lock/private glass, distinct from the neutral
+   skip glass. NOT amber, NOT keep-green / cut-red. */
+html.loupe-glass #fvault,
+html.loupe-glass .bvault{
+  background:rgba(44,60,76,0.30);
+  border:1px solid rgba(126,156,182,0.52);
+  color:#bcd6e8;
+  box-shadow:inset 0 1px 0 rgba(190,214,232,0.30),0 0 14px rgba(44,60,76,0.34);
+}
+html.loupe-glass #fvault:hover,
+html.loupe-glass .bvault:hover{border-color:rgba(150,182,208,0.7)}
+
+/* A3 — active states (override the base ID rules: specificity must beat #flive.on etc.) */
+/* the Focus view's single GLOWING AMBER GLASS accent */
+html.loupe-glass #flive.on{
+  background:var(--g-amber-bg);
+  border:1px solid var(--g-amber-border);
+  box-shadow:var(--g-amber-rim),var(--g-amber-glow);
+  color:#ffdca6;
+}
+/* engaged vault → brighter cool glass, still glass-aware (no solid fill, no amber) */
+html.loupe-glass #fvault.on{
+  background:rgba(58,78,98,0.42);
+  border:1px solid rgba(150,182,208,0.74);
+  box-shadow:inset 0 1px 0 rgba(200,222,240,0.4),0 0 18px rgba(58,78,98,0.42);
+  color:#dcecf6;
+}
+
+/* B5 — relocated overlay buttons mirror the glass-pill look (class-on = glass,
+   class-off = plain). Resting #flive / #ffull stay NEUTRAL glass; #flive.on amber
+   from A3 still wins (id+class beats this id+element rule). */
+html.loupe-glass #fviewbar button,
+html.loupe-glass #fnav button,
+html.loupe-glass #fnext button{
+  background:var(--g-bg-2);
+  border:1px solid var(--g-border);
+  border-radius:999px;
+  box-shadow:var(--g-rim);
+}
+html.loupe-glass #fviewbar button:hover,
+html.loupe-glass #fnav button:hover,
+html.loupe-glass #fnext button:hover{border-color:var(--g-amber-border)}
+
+/* ---- P9 / audit 8.5: the persistent rail --------------------------------
+   Appended at end of file ON PURPOSE. These rules sit at the same specificity as the
+   base ones they override (main, header#top), so they only win by source order. The
+   first attempt inserted this block near the top and the content slid under the rail --
+   main{margin:0 auto} beat main{margin-left:var(--rail-w)} and only the non-colliding
+   properties applied, which looked half-correct rather than obviously broken.
+
+   Additive: no rule outside this block is edited. Two levers do the work -- --rail-w
+   offsets the fixed full-width surfaces, and syncGbarH drives --gbar-h to 0px in rail
+   mode so the thirteen header-height-anchored rules fall to the top edge on their own
+   (in rail mode the header is full height, and its real offsetHeight would push every
+   one of them off-screen). */
+@media (min-width:1180px){
+  :root{--rail-w:186px}
+  header#top{top:0;left:0;bottom:0;right:auto;width:var(--rail-w);
+    padding:14px 12px;flex-direction:column;align-items:stretch;gap:12px;
+    border-bottom:none;border-right:1px solid var(--line);overflow-y:auto}
+  header#top .hrow1{flex-direction:column;align-items:stretch;gap:12px}
+  header#top .brand{align-items:flex-start}
+  header#top .hbtns{flex-direction:column;align-items:stretch;gap:2px;width:100%}
+  header#top .hbtns button{justify-content:flex-start;width:100%}
+  header#top .strip{flex:0 0 auto;margin:0;width:100%;order:9;padding:6px 8px}
+  header#top #strip{grid-template-columns:1fr;justify-content:start;gap:1px}
+  header#top .hcrumb{order:8}
+  .navspace{flex-direction:column;align-items:stretch;gap:2px;padding-left:0}
+  .navspace + .navspace{margin-left:0;margin-top:12px}
+  .navspace + .navspace::before{left:0;right:0;top:-6px;width:auto;height:1px;transform:none}
+  .navspace-l{padding:0 0 3px 2px}
+  main{margin-left:var(--rail-w);margin-right:0;padding-top:14px}
+  #placesview,#tripsheet,#mapview,#peopleview,#persondetail,#vaultview,#nsfwview,
+  #cuttingview,#calendarview,#settingsview,#searchview,#focus,#resmodal,#keysview{left:var(--rail-w)}
+}
+
+/* ---- P9 / audit line 299: the hero transition ---------------------------
+   #fimg and the tapped thumbnail share one view-transition-name, so the browser
+   animates the frame from its place on the contact sheet up to the loupe and back.
+   Only one #fimg exists at a time, so the name can live here permanently; the tile
+   side is tagged and untagged in JS around the mutation.
+
+   Timing is deliberately close to the existing overlay feel rather than showy: the
+   photograph is the subject, the movement is just continuity (8.0 -- nothing in the
+   interface may compete with a photograph for attention). */
+#fimg{view-transition-name:loupe-hero;contain:paint}
+::view-transition-old(loupe-hero),
+::view-transition-new(loupe-hero){animation-duration:220ms;
+  animation-timing-function:cubic-bezier(.2,.7,.3,1)}
+@media (prefers-reduced-motion:reduce){
+  ::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){
+    animation:none!important}
+}
+
+/* ---- D1 / audit 8.2-8.3: the token layer --------------------------------
+   A principled OKLCH ramp under the palette that already exists. Every stop's
+   LIGHTNESS is the measured L of the token it replaces, so the app's tonal structure
+   is unchanged; what changes is that the ramp is now derivable instead of twelve
+   hand-picked hexes, and 8.2's "derived states are computed, not hand-picked" becomes
+   possible via color-mix().
+
+   Measured from the shipped palette: neutral hue mean 76.5, which is already 8.2's
+   "whisper of warmth (hue ~70)". Two things in 8.2 are NOT applied here, because both
+   change the product's identity rather than its plumbing, and 8.15 lists both as open
+   questions:
+
+     1. Neutral chroma. 8.2 asks for <=0.008; the shipped neutrals run 0.010-0.037.
+        Dropping to the ceiling visibly de-saturates the chrome from warm slate toward
+        grey. Kept at measured chroma; the ramp makes the change a one-line edit when
+        David decides.
+     2. The accent. 8.2 specifies "a restrained cyan-leaning blue" (~0.72 0.11 230).
+        Loupe's accent is amber, and the amber loupe IS the brand mark (9.10). Swapping
+        it would re-identify the app. --accent stays mapped to amber.
+
+   light-dark() and color-scheme are scaffolded so 8.2's "light mode is free, not a
+   fork" stays available; the light values are placeholders until someone designs them. */
+:root{
+  color-scheme: dark;
+
+  /* neutral ramp -- L measured from the shipped tokens, hue 70, warmth preserved */
+  --n-0: oklch(0.181 0.0103 70);   /* deepest table  (was #15110d) */
+  --n-1: oklch(0.213 0.0138 70);   /* raised surface (was #1d1812) */
+  --n-2: oklch(0.236 0.0182 70);   /* panel          (was #241d15) */
+  --n-3: oklch(0.316 0.0249 70);   /* hairline       (was #3A3024) */
+  --n-4: oklch(0.400 0.0270 72);
+  --n-5: oklch(0.535 0.0298 76);   /* faint text     (was #766C5A) */
+  --n-6: oklch(0.646 0.0365 76);   /* muted text     (was #9c8b76) */
+  --n-7: oklch(0.702 0.0276 80);   /* dim text       (was #A79E8C) */
+  --n-8: oklch(0.820 0.0220 84);
+  --n-9: oklch(0.919 0.0195 88);   /* ink            (was #E9E4D6) */
+
+  /* the only hues in the app: one accent + the decision set (8.2) */
+  --accent:  oklch(0.622 0.1304 67);   /* amber -- the brand mark, not 8.2's blue */
+  --accent-lit: oklch(0.722 0.1467 66);
+  --dec-keep: oklch(0.622 0.1563 131);
+  --dec-cut:  oklch(0.535 0.1403 27);
+
+  /* computed states, not hand-picked (8.2) */
+  --accent-hover: color-mix(in oklch, var(--accent) 82%, var(--n-9));
+  --accent-quiet: color-mix(in oklch, var(--accent) 24%, var(--n-1));
+  --surface-raised: color-mix(in oklch, var(--n-2) 88%, var(--n-9));
+}
+
+/* 8.3 -- numbers are the personality of a dense app. Tabular figures stop columns
+   shimmying as counts tick; slashed zero disambiguates in EXIF. Scoped to the data
+   surfaces rather than global so prose is unaffected. */
+.strip,#strip,.keysgrid kbd,.mprow,.crcount,.achip,.navspace-l,
+[class*=count],[class*=stat]{font-variant-numeric:tabular-nums}
+
+/* Visible keyboard focus. The app is keyboard-driven (K/X/U/V, arrows, ?, Esc) and had
+   no focus indicator at all, so tabbing through it was invisible. :focus-visible keeps
+   it off for mouse users. */
+:where(button,a,input,select,textarea,[tabindex]):focus-visible{
+  outline:2px solid var(--accent-lit);
+  outline-offset:2px;
+  border-radius:4px;
+}
+/* Make the ramp load-bearing. Until this block the ramp was declared and unused; here
+   the semantic tokens the whole stylesheet already references are re-expressed in terms
+   of it, so changing one stop re-skins the app -- which is the entire point of D1.
+
+   Values are visually identical because each stop's L/C/H was measured FROM the hex it
+   replaces. This is a refactor of the palette, not a re-colour of it.
+
+   html.loupe-glass is remapped too, not just :root: it re-declares --ink, --line,
+   --amber, --keep and --cut at higher specificity, and app.html always carries that
+   class, so remapping :root alone would leave the ramp overridden and inert on every
+   served page. */
+:root{
+  --bg:var(--n-0); --bg2:var(--n-1); --panel:var(--n-2); --line:var(--n-3);
+  --faint:var(--n-5); --mut:var(--n-6); --dim:var(--n-7); --ink:var(--n-9);
+  --amber:var(--accent); --lit:var(--accent-lit);
+  --keep:var(--dec-keep); --green:var(--dec-keep); --cut:var(--dec-cut);
+}
+html.loupe-glass{
+  --ink:var(--n-9); --line:var(--n-3);
+  --amber:var(--accent); --lit:var(--accent-lit);
+  --dim:var(--n-7); --faint:var(--n-5);
+  --keep:var(--dec-keep); --cut:var(--dec-cut);
+  --surface-hover:color-mix(in oklch, var(--n-2) 86%, var(--n-9));
+}
+
+/* ---- D3 / audit 8.4: density -------------------------------------------
+   Three steps toggled with [ and ]. 8.4 specifies 96 / 120 / 160 as target ROW
+   HEIGHTS for the justified grid; that grid is not buildable yet (see below), so these
+   are the square-grid equivalents, with Standard pinned to the current 150px so the
+   default view is unchanged for anyone who never presses a key.
+
+   Why not the justified rows themselves: they need each asset's aspect ratio to compute
+   flex-grow, and metadata.db has NO dimension columns -- verified 2026-08-09, which
+   answers 8.15's open question 2. That is an ingest change (W42/W44), not a CSS one.
+
+   One variable drives it, so every future density-aware component reads the same source
+   (8.4 wants marks, rings, gaps and type all responding through one value). */
+:root{--tile-min:150px}
+html[data-density=sheet]{--tile-min:104px}
+html[data-density=study]{--tile-min:210px}
+.grid{grid-template-columns:repeat(auto-fill,minmax(var(--tile-min),1fr))}
+
+/* ---- D3 / audit 8.1: the grease-pencil decision language ----------------
+   Editors marked contact sheets with a china marker: a loose circle round a select, a
+   strike through a reject. The mark sits ON the photograph and never alters it -- the
+   faithful-library principle drawn literally, since a decision is an overlay and the
+   negative underneath is untouched.
+
+   Rendered as a mask rather than a coloured SVG so one shape can take its colour from a
+   token, which is what makes 8.15's open question 1 a one-attribute switch instead of
+   two sets of assets.
+
+   8.15 QUESTION 1 IS OPEN AND THIS PROTOTYPES BOTH, as the audit asks:
+     default        sage      -- consistent with the existing keep green
+     [data-keepmark=rust]     -- classic china-marker red-orange, historically true
+   Sage is the default only because Loupe's cut colour is already red: a red-adjacent
+   keep next to a red cut is the one combination that could actively mislead at a glance.
+   Set data-keepmark="rust" on <html> to see the other.
+
+   8.1 says the marks are the ENTIRE decision UI at grid density -- no badges, no chips --
+   so the text state badge is hidden while a mark is showing. */
+:root{
+  --mark-keep: oklch(0.62 0.085 145);        /* sage */
+  --mark-cut:  oklch(0.58 0.150 30);         /* china-marker red */
+}
+html[data-keepmark=rust]{ --mark-keep: oklch(0.64 0.150 45); }
+
+.tile.keep::after,.tile.cut::after{
+  content:"";position:absolute;top:5px;left:5px;width:52px;height:48px;
+  mask-size:contain;mask-repeat:no-repeat;-webkit-mask-size:contain;
+  -webkit-mask-repeat:no-repeat;pointer-events:none;opacity:.92;
+}
+.tile.keep::after{
+  background:var(--mark-keep);
+  mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2056%2052%22%3E%3Cpath%20d%3D%22M9%2024%20C9%2013%2020%206%2032%207%20C44%208%2051%2016%2050%2026%20C49%2036%2038%2043%2025%2041%20C13%2039%209%2033%209%2024%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222.6%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E");-webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2056%2052%22%3E%3Cpath%20d%3D%22M9%2024%20C9%2013%2020%206%2032%207%20C44%208%2051%2016%2050%2026%20C49%2036%2038%2043%2025%2041%20C13%2039%209%2033%209%2024%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222.6%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E");
+}
+.tile.cut::after{
+  background:var(--mark-cut);
+  mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2056%2052%22%3E%3Cpath%20d%3D%22M8%2044%20C18%2033%2032%2020%2048%208%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E");-webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2056%2052%22%3E%3Cpath%20d%3D%22M8%2044%20C18%2033%2032%2020%2048%208%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E");
+  top:0;left:0;width:100%;height:100%;
+}
+/* a cut frame recedes: 8.1 asks for 55% and a little desaturation */
+.tile.cut>img{opacity:.55;filter:saturate(.82)}
+/* the mark IS the decision UI at this density */
+.tile.keep .b-st,.tile.cut .b-st{display:none}
+
+@media (prefers-reduced-motion:reduce){
+  .tile.keep::after,.tile.cut::after{transition:none}
+}
+
+/* ---- D4 / audit 8.7: zoom to pixel --------------------------------------
+   "Zoom-to-pixel is non-negotiable for culling ... sharpness judgment is THE cull
+   decision." Space toggles fit <-> 100%.
+
+   At 100% the image is laid out at its natural size inside a scrolling stage and
+   image-rendering:pixelated stops the browser smoothing away the very grain being
+   judged. Answering 8.15 question 3 the cheap way: the source is /api/full, which is
+   already LAN-gated and already range-served with long cache headers, so no new storage
+   and no new endpoint. Guests keep the <=2048 preview -- /api/full 403s for them by
+   design, and a soft zoom is better than a broken one. */
+#fstage.zoomed{overflow:auto;cursor:grab;overscroll-behavior:contain;
+  scrollbar-gutter:stable}
+#fstage.zoomed:active{cursor:grabbing}
+#fstage.zoomed #fimg{max-width:none;max-height:none;width:auto;height:auto;
+  image-rendering:pixelated}
+#fstage .zoomhint{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);
+  font-family:var(--mo);font-size:10px;letter-spacing:.06em;
+  font-variant-caps:all-small-caps;color:var(--n-7);
+  background:color-mix(in oklch,var(--n-0) 72%,transparent);
+  border:1px solid var(--line);border-radius:5px;padding:2px 8px;pointer-events:none}
+
+/* ---- D4 / audit 8.3: EXIF label/value alignment -------------------------
+   "EXIF drawer set on subgrid so label/value columns align across every row group."
+   The drawer is one column of independent row groups, so a real subgrid needs each
+   group to be a grid item of a shared parent track. Here the panel declares the track
+   and every direct row group inherits it, which produces the same alignment with the
+   markup that exists.
+
+   Tabular figures and small-caps labels are 8.3's "numbers are the personality" and the
+   lens-barrel reading of EXIF labels. */
+.meta{display:grid;grid-template-columns:auto 1fr;align-content:start;gap:2px 12px}
+.meta > *{grid-column:1 / -1}
+.meta .mprow{display:grid;grid-template-columns:subgrid;grid-column:1 / -1;
+  align-items:baseline}
+.meta .mprow > :first-child{font-variant-caps:all-small-caps;letter-spacing:.02em;
+  color:var(--n-6)}
+.meta .mprow > :last-child{font-variant-numeric:tabular-nums slashed-zero}
+
+/* ---- D3 / audit 8.4: justified rows -------------------------------------
+   "Contact sheets never crop; neither should Loupe." Rows of frames at their true
+   aspect, filling the width, last row left-aligned.
+
+   The flex-grow trick, pure CSS as 8.4 asks: each frame's basis is its aspect times the
+   target row height, and it grows in proportion to that same aspect, so a row of frames
+   settles at a common height with every frame keeping its shape. Row height follows the
+   density variable, so [ and ] drive this too.
+
+   --ar comes from the server (lean()) and is orientation-corrected: width_pixels and
+   height_pixels are the sensor frame, and 35,940 assets in this library are displayed a
+   quarter turn round, so using the raw numbers would mis-shape a third of the sheet.
+   Assets with no dimensions (0.65%) fall back to --ar:1 and simply sit square.
+
+   Opt-in via html[data-grid=justified] until David has looked at it: this replaces the
+   layout of the primary browsing surface, which is not something to switch on for
+   someone while they are asleep. */
+html[data-grid=justified] .grid{
+  display:flex;flex-wrap:wrap;align-content:flex-start;gap:3px;
+  --row-h:calc(var(--tile-min) * 0.86);
+}
+html[data-grid=justified] .grid .tile{
+  flex:var(--ar) 1 calc(var(--ar) * var(--row-h));
+  height:var(--row-h);min-width:0;
+}
+html[data-grid=justified] .grid .tile > img{
+  width:100%;height:100%;object-fit:cover;display:block;
+}
+/* 8.6: contact sheets are square-cut at the tightest density */
+html[data-grid=justified][data-density=sheet] .grid .tile{border-radius:0}
+
+/* ---- D5 / audit 8.5: the command palette --------------------------------
+   "One input to go anywhere." Opens on / or Cmd-K. Neutral ramp only -- it is chrome,
+   and 8.0's rule is that nothing in the interface competes with a photograph. Sits at
+   z-index 56, just above the keyboard map, because it is summoned over whatever you
+   were doing; registered in OVL so Escape and navigation dismiss it through the single
+   chokepoint rather than a bespoke lifecycle. */
+#paletteview{position:fixed;inset:0;z-index:56;background:#0009;display:none;
+  align-items:flex-start;justify-content:center;padding:12vh 24px 24px}
+#paletteview.on{display:flex}
+.palbox{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+  width:100%;max-width:560px;box-shadow:0 16px 44px rgba(0,0,0,.55);overflow:hidden}
+#palq{width:100%;border:none;border-bottom:1px solid var(--line);background:transparent;
+  color:var(--ink);font-family:var(--bd);font-size:16px;padding:14px 16px;outline:none}
+#palq::placeholder{color:var(--n-5)}
+.palresults{max-height:46vh;overflow-y:auto;padding:6px}
+.palrow{display:flex;align-items:baseline;gap:10px;padding:7px 10px;border-radius:6px;
+  cursor:pointer;color:var(--mut);font-size:14px}
+.palrow .palkind{font-family:var(--mo);font-size:9px;letter-spacing:.06em;
+  font-variant-caps:all-small-caps;color:var(--n-5);flex:0 0 62px}
+.palrow .palname{color:var(--ink)}
+.palrow .palhint{margin-left:auto;font-family:var(--mo);font-size:10px;color:var(--n-5);
+  font-variant-numeric:tabular-nums}
+.palrow.on{background:color-mix(in oklch,var(--accent) 18%,var(--panel))}
+.palempty{padding:14px 12px;color:var(--n-5);font-size:13px}
+.palfoot{display:flex;gap:16px;border-top:1px solid var(--line);padding:7px 14px;
+  font-family:var(--mo);font-size:10px;color:var(--n-5)}
+.palfoot kbd{border:1px solid var(--line);border-radius:3px;padding:0 4px;margin-right:3px}
+
+/* ---- D7 / audit 9.3: the People progress header -------------------------
+   "People is where completeness visualization pays off most." Two bars, because
+   identified and clustered are different jobs: one is finished work, the other is the
+   queue. Neutral ramp with the accent only on the finished share -- chrome carries no
+   chroma (8.2), and the one place a hue earns its keep here is the number that means
+   done. */
+.peopleprog{display:inline-flex;align-items:center;gap:6px;margin-left:14px;
+  font-family:var(--mo);font-size:11px;color:var(--mut);
+  font-variant-numeric:tabular-nums}
+.peopleprog b{color:var(--ink);font-weight:500}
+.ppbar{display:inline-block;width:64px;height:4px;border-radius:2px;
+  background:var(--n-3);overflow:hidden;vertical-align:middle}
+.ppbar i{display:block;height:100%;background:var(--accent)}
+.ppbar.dim i{background:var(--n-6)}
+
+/* ---- D8 / audit 9.4: the door ------------------------------------------
+   "Ceremony proportional to consequence." This is the app's only irreversible INTENT --
+   the manifest a human later acts on -- and until now it was one click with a toast.
+
+   No destructive colour until the gate is actually armed: 9.4 says no red buttons until
+   step 3, so the confirm button stays neutral and disabled until the typed count
+   matches. The protections list is deliberately shown even when every guard held zero,
+   because "0 vaulted" is evidence the check ran. */
+#exportgate{position:fixed;inset:0;z-index:57;background:#000a;display:none;
+  align-items:center;justify-content:center;padding:24px}
+#exportgate.on{display:flex}
+.gatebox{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+  max-width:560px;width:100%;box-shadow:0 18px 50px rgba(0,0,0,.6)}
+.gatehead{font-family:var(--hd);font-size:17px;color:var(--ink);
+  padding:15px 18px 12px;border-bottom:1px solid var(--line)}
+.gatebody{padding:15px 18px;color:var(--mut);font-size:14px;line-height:1.6}
+.gatebody .gcount{color:var(--ink);font-size:22px;font-family:var(--hd)}
+.gatebody ul{margin:12px 0 0;padding:0;list-style:none;
+  font-family:var(--mo);font-size:12px;font-variant-numeric:tabular-nums}
+.gatebody li{display:flex;justify-content:space-between;padding:3px 0;
+  border-bottom:1px solid var(--n-2)}
+.gatebody li b{color:var(--ink);font-weight:500}
+.gatebody li.held b{color:var(--dec-keep)}
+.gatefoot{display:flex;align-items:center;gap:9px;padding:12px 18px 14px;
+  border-top:1px solid var(--line);flex-wrap:wrap}
+#gatetypelabel{font-family:var(--mo);font-size:11px;color:var(--n-6);
+  font-variant-caps:all-small-caps;letter-spacing:.04em}
+#gatetype{width:110px;background:var(--bg2);border:1px solid var(--line);
+  border-radius:6px;color:var(--ink);font-family:var(--mo);font-size:14px;
+  padding:6px 9px;outline:none;font-variant-numeric:tabular-nums}
+#gatetype:focus-visible{outline:2px solid var(--accent-lit);outline-offset:1px}
+.gatefoot button{margin-left:auto;background:transparent;border:1px solid var(--line);
+  border-radius:6px;color:var(--mut);font-family:var(--mo);font-size:12px;
+  padding:6px 12px;cursor:pointer}
+#gatego{margin-left:0}
+#gatego:disabled{opacity:.4;cursor:not-allowed}
+#gatego.armed{border-color:var(--dec-cut);color:var(--dec-cut)}
+
+/* 9.5's grammar hints: "teach by showing, never by docs". Ghost chips under the input
+   on an empty query, gone the moment you type. Neutral only -- they are chrome. */
+.palhints{display:flex;flex-wrap:wrap;gap:6px;padding:6px 10px 8px}
+.palhints span{font-family:var(--mo);font-size:10px;color:var(--n-5);
+  border:1px solid var(--n-3);border-radius:4px;padding:2px 7px}
+.palhints b{color:var(--n-7);font-weight:500}
+.palrow .palkind{text-transform:lowercase}
+
+/* ---- D8 / audit 9.4: rescue is the primary affordance ------------------
+   "The biggest button in any tray is rescue (un-cut), not confirm -- the room is biased
+   toward keeping, matching the data model's bias." So rescue is the one that carries
+   weight here, and cut is the quiet one. The keep-green reads correctly: rescue is a
+   move back toward keeping, not a destructive act. */
+.brescue{font-family:var(--mo);font-size:12.5px;font-weight:500;
+  background:color-mix(in oklch, var(--dec-keep) 22%, var(--panel));
+  color:var(--ink);border:1px solid var(--dec-keep);border-radius:7px;
+  padding:7px 14px;cursor:pointer;letter-spacing:.01em}
+.brescue:hover{background:color-mix(in oklch, var(--dec-keep) 34%, var(--panel))}
+.candbar .bcut{opacity:.78;font-size:11.5px}
+.candbar .bcut:hover{opacity:1}
+
+/* ---- D12 / audit 9.1 the mosaic ---------------------------------------------
+   "Trips are event memory, not calendar memory: the design leans mosaic. Masonry
+   ... with one hero frame per trip", and 8.4's rule for the whole app: "contact
+   sheets never crop; neither should Loupe."
+
+   The mosaic was impossible by construction. Every hero was pinned to
+   aspect-ratio:4/3 with object-fit:cover, so each postcard was exactly as tall as
+   every other one and each hero was cropped to fit that box. A grid of identical
+   rectangles is the calendar treatment this section explicitly argues against.
+
+   Heroes now carry their true aspect (--ar, measured from the decoded image, so no
+   API change and no second source of truth), which both stops the crop and gives the
+   cards the varying heights masonry needs. align-items:start is what lets a card be
+   its natural height; without it every card in a row stretches to the tallest and
+   the ragged edge -- the whole point -- disappears again.
+
+   Masonry proper is behind @supports twice, since the property was renamed mid-flight
+   (grid-template-rows:masonry -> item-flow). Where neither lands, the existing
+   auto-fill grid stays as the justified-row fallback this section calls for, now with
+   honest heights rather than uniform ones. */
+#plgallery{align-items:start}
+@supports (grid-template-rows:masonry){ #plgallery{grid-template-rows:masonry} }
+@supports (item-flow:row masonry){ #plgallery{item-flow:row masonry} }
+
+/* tabular nums: 9.1 asks for the frame count in them, and a mosaic of counts that
+   jitter column-to-column reads as noise. */
+.pc .foot,.pc .rev{font-variant-numeric:tabular-nums}
+
+/* 3-frame peek strip under the hero. :has(:hover) reveals it on the table. */
+.pc .peekstrip{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-top:3px;
+  max-height:0;opacity:0;overflow:hidden;
+  transition:max-height .18s cubic-bezier(.2,.7,.3,1),opacity .18s linear}
+.pc:hover .peekstrip,.pc:focus-visible .peekstrip{max-height:60px;opacity:1}
+.pc .peekstrip img{width:100%;height:54px;object-fit:cover;display:block;border:1px solid #0002}
+@media (prefers-reduced-motion:reduce){.pc .peekstrip{transition:none}}
+
+/* ---- D12 / audit 9.1: the side sheet keeps its own edge in rail mode ----------
+   The rail block above offsets every fixed full-width surface by --rail-w, which is
+   right for surfaces that fill the room and wrong for a sheet that sits beside it:
+   it beat left:auto by source order and pinned the sheet against the rail, so the
+   dimmed table ended up to its RIGHT and half-cropped at the window edge. The room
+   was technically still visible, but by accident rather than design.
+
+   Must stay after the rail block to win, and before the touch branch, which is last. */
+@media (min-width:1180px){ #tripsheet{left:auto} }
+
+/* ---- D13 / audit 9.2: the legend has to describe the marker it has -----------
+   The legend still showed an amber disc labelled "sized by count" after the markers
+   became frame-stacks -- describing markers that no longer exist, and silent about
+   the ring, which is the one encoding a reader cannot guess. A legend that does not
+   match its map is worse than no legend. */
+.lgstack{position:relative;display:inline-block;width:15px;height:11px;flex:none}
+.lgstack i,.lgstack b{position:absolute;inset:0;border-radius:1px;background:#e8e0cf;
+  border:1px solid rgba(26,18,7,.5)}
+.lgstack i:first-child{transform:rotate(-8deg) translate(-2px,1px);background:#b9b09d}
+.lgstack i:nth-child(2){transform:rotate(5deg) translate(2px,-1px);background:#cdc4b0}
+.lgring{display:inline-block;width:15px;height:11px;flex:none;border-radius:1px;
+  background:#e8e0cf;border:3px solid #1a1207}
+
+/* ---- D13 / audit 9.2: the bottom deck ----------------------------------------
+   "Tap cluster -> the cluster BECOMES a contact-sheet strip pinned to the bottom
+   deck, map dims; Esc returns. Map never navigates away -- it's a lens, not a page."
+
+   What existed was a 286px card floating at bottom-left showing six sampled thumbs
+   in a 3x2 grid. It read as a popup about the cluster rather than as the cluster
+   itself laid out to be looked at, the map behind it stayed at full brightness so
+   nothing indicated a lens was open, and Escape did not reach it at all.
+
+   Overrides rather than edits, so the original card rules stay intact and this block
+   is one contiguous thing to remove. Placed before the touch branch, which is last. */
+.mapcard{left:0;right:0;bottom:0;width:auto;border-radius:0;padding:11px 16px 12px;
+  box-shadow:0 -18px 44px -12px #000e,0 0 0 1px #0006;transform:translateY(20px)}
+/* Three cells: who/where, the strip, the way in. The eyebrow/title/sub needed a
+   wrapper first -- as five loose children they wrapped onto a second grid row, which
+   squeezed the strip into a 230px column showing three frames and stretched the
+   button across the rest. */
+.mapcard.on{display:grid;grid-template-columns:minmax(190px,240px) 1fr auto;
+  gap:16px;align-items:center}
+.mcmeta{min-width:0}
+.mcmeta .mcsub{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mapcard .mctitle{font-size:19px;margin-top:2px}
+/* the strip: one row of frames, scrolled horizontally -- a contact sheet, not a grid */
+.mcthumbs{display:flex;gap:4px;overflow-x:auto;margin:0;padding-bottom:2px;
+  scrollbar-width:thin;overscroll-behavior-x:contain}
+.mcthumbs img{width:72px;height:72px;flex:none;aspect-ratio:auto}
+.mapcard .mcopen{width:auto;white-space:nowrap;padding:10px 15px}
+.mapcard .mcclose{top:6px;right:8px}
+/* the map dims, the deck does not -- filter on the map element only, so the deck
+   sitting above it keeps full contrast */
+body:has(#mapcard.on) #lmap{filter:brightness(.62);transition:filter .2s linear}
+@media (prefers-reduced-motion:reduce){body:has(#mapcard.on) #lmap{transition:none}}
+@media (max-width:820px){
+  .mapcard.on{grid-template-columns:1fr;gap:9px}
+  .mapcard .mcopen{width:100%}
+  .mcmeta .mcsub{white-space:normal}
+}
+
+/* ---- D8 / audit 9.4: the floor -----------------------------------------------
+   "rule bins as labeled trays down the left; the selected tray's frames spill onto
+   the sheet with their triggering rule as small-caps caption."
+
+   The room was a grid of equally-prominent cards, and looking into a bin meant
+   leaving the room for the review surface. Trays now run down the left; the sheet
+   beside them is the bin, opened. */
+/* .crgrid is still the card grid it was -- repeat(auto-fill,minmax(330px,1fr)) --
+   so the floor, being a single child, was placed into ONE 330px column and the sheet
+   was squeezed to a strip where the explain text wrapped one word per line. Scoped
+   with :has so the rule only applies to the grid that actually holds the floor. */
+.crgrid:has(.crfloor){display:block}
+.crfloor{display:grid;grid-template-columns:minmax(210px,268px) 1fr;gap:18px;align-items:start}
+.crtrays{display:flex;flex-direction:column;gap:6px;position:sticky;top:8px}
+.crtray{display:grid;grid-template-columns:auto 1fr auto;gap:7px;align-items:center;
+  text-align:left;background:transparent;border:1px solid var(--line);border-radius:8px;
+  padding:9px 11px;cursor:pointer;color:var(--mut);font-family:var(--mo);font-size:12px;
+  transition:background .12s,border-color .12s,color .12s}
+.crtray:hover{color:var(--ink);background:#221b13;border-color:var(--amber)}
+.crtray.on{color:var(--ink);background:#241c12;border-color:var(--amber)}
+.crtray .trname{font-family:var(--hd);font-size:14px;font-weight:500;color:inherit;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.crtray .trn{font-variant-numeric:tabular-nums;color:var(--ink);font-weight:600}
+.crtray .crchip{grid-column:2/-1;justify-self:start}
+.crtray.amber .crbadge{color:var(--amber)}
+
+.crpane{min-width:0}
+.crhead{display:flex;gap:14px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+.crpane .crrev{margin-top:0;white-space:nowrap}
+.crframes{display:grid;grid-template-columns:repeat(auto-fill,minmax(124px,1fr));gap:8px;margin-top:14px}
+.crframe{margin:0;position:relative;background:#0a0805;border:1px solid #2a2218;border-radius:6px;
+  overflow:hidden}
+.crframe img{display:block;width:100%;aspect-ratio:1;object-fit:cover}
+/* the triggering rule, in small caps, on the frame it fired on */
+.crcap{font-family:var(--mo);font-size:8.5px;letter-spacing:.13em;font-variant-caps:all-small-caps;
+  text-transform:lowercase;color:#d8c8a4;background:linear-gradient(transparent,#000d);
+  position:absolute;left:0;right:0;bottom:0;padding:9px 5px 3px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.crwait,.crmore{font-family:var(--mo);font-size:11.5px;color:var(--mut);padding:14px 2px;
+  grid-column:1/-1}
+@media (max-width:860px){
+  .crfloor{grid-template-columns:1fr}
+  .crtrays{position:static;flex-direction:row;flex-wrap:wrap}
+  .crtray{flex:1 1 auto}
+}
+
+/* ---- D9 / audit 9.5: three shelves -------------------------------------------
+   "it fans results into three labeled shelves ... Shelves render as horizontal sheet
+   strips; Enter on a shelf expands it to a full sheet with the query pinned as a
+   filter chip."
+
+   Search was one flat grid of semantic frame hits, so a query that was plainly a
+   place or a person answered only with frames the model thought looked like the
+   words. #searchgrid keeps its own grid rule for the old flat layout, so the shelves
+   -- being section children -- would be laid into its columns; scoped with :has. */
+#searchgrid:has(.shelf){display:block}
+.shelf{margin:0 0 22px}
+.shelfhd{display:flex;align-items:center;gap:10px;cursor:pointer;padding:5px 2px;
+  border-bottom:1px solid var(--line);outline:none}
+.shelfhd:hover,.shelfhd:focus-visible{border-color:var(--amber)}
+.shelfhd:focus-visible{box-shadow:0 2px 0 -1px var(--amber)}
+.shelfhd h3{font-family:var(--hd);font-weight:500;font-size:16px;margin:0;color:var(--ink)}
+.shelfn{font-family:var(--mo);font-size:11.5px;color:var(--mut);font-variant-numeric:tabular-nums}
+.shelfx{margin-left:auto;font-family:var(--mo);font-size:11px;color:var(--mut)}
+.shelfhd:hover .shelfx,.shelfhd:focus-visible .shelfx{color:var(--amber)}
+/* the query, pinned as a filter chip on the expanded shelf */
+.shelfchip{display:inline-flex;align-items:center;gap:6px;font-family:var(--mo);font-size:11px;
+  background:#241c12;border:1px solid var(--amber);color:var(--ink);border-radius:13px;padding:3px 5px 3px 10px}
+.shelfchip .chipx{background:none;border:0;color:var(--mut);cursor:pointer;font-size:11px;
+  line-height:1;padding:3px 5px;border-radius:50%}
+.shelfchip .chipx:hover{color:var(--ink);background:#0003}
+
+.shelfstrip{display:flex;gap:8px;overflow-x:auto;padding:11px 2px 4px;
+  scrollbar-width:thin;overscroll-behavior-x:contain}
+.shelfsheet{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:8px;padding:11px 2px 4px}
+.shelfempty{font-family:var(--mo);font-size:11.5px;color:var(--mut);padding:12px 2px}
+
+.shelfcard{flex:0 0 auto;text-align:left;display:grid;gap:2px;cursor:pointer;
+  background:transparent;border:1px solid var(--line);border-radius:8px;padding:9px 12px;
+  min-width:150px;transition:background .12s,border-color .12s}
+.shelfcard:hover{background:#221b13;border-color:var(--amber)}
+.shelfcard .scname{font-family:var(--hd);font-size:14px;color:var(--ink);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.shelfcard .schint{font-family:var(--mo);font-size:10.5px;color:var(--mut);
+  font-variant-numeric:tabular-nums}
+.shelfstrip .shelftile{flex:0 0 auto;width:118px;padding:0;border:1px solid #2a2218;
+  border-radius:6px;overflow:hidden;background:#0a0805;cursor:pointer}
+.shelftile img{display:block;width:100%;aspect-ratio:1;object-fit:cover}
+.shelfsheet .shelftile{width:auto}
+@media (prefers-reduced-motion:reduce){.shelfcard,.shelfhd{transition:none}}
+
+/* the shelves sit on the paper slab, not on the charcoal ------------------------
+   html.loupe-glass .grid paints #searchgrid as a cream table slab, and #searchgrid
+   carries class=grid. The shelf headings and card names were coloured with --ink --
+   the dark theme's LIGHT ink -- so they rendered nearly invisible on paper: correct
+   contrast by computed value (L 0.919 on L 0.181) and unreadable on screen, because
+   the slab is a background-image and reports no backgroundColor at all.
+
+   Scoped to the glass theme so the charcoal case keeps the tokens it should have. */
+html.loupe-glass .shelfhd{border-bottom-color:rgba(26,18,7,.18)}
+html.loupe-glass .shelfhd h3{color:#241d15}
+html.loupe-glass .shelfn,
+html.loupe-glass .shelfx,
+html.loupe-glass .shelfempty{color:#6b5f4a}
+html.loupe-glass .shelfhd:hover .shelfx,
+html.loupe-glass .shelfhd:focus-visible .shelfx{color:#9c6512}
+html.loupe-glass .shelfcard{border-color:rgba(26,18,7,.22)}
+html.loupe-glass .shelfcard:hover{background:rgba(26,18,7,.06);border-color:#9c6512}
+html.loupe-glass .shelfcard .scname{color:#241d15}
+html.loupe-glass .shelfcard .schint{color:#6b5f4a}
+html.loupe-glass .shelfchip{background:rgba(26,18,7,.06);border-color:#9c6512;color:#241d15}
+html.loupe-glass .shelfchip .chipx{color:#6b5f4a}
+
+/* ---- D9 / audit 9.5 + C4: the similarity ring --------------------------------
+   "results carry a similarity ring (conic, accent) so the falloff is visible."
+
+   Rank-relative, not absolute -- see the comment in renderShelves: a real query's 59
+   neighbours span cosine 0.8916-0.9238, so an absolute conic would be a nearly-full
+   circle on every tile and would show precisely nothing. The exact cosine is on the
+   element's title. */
+.simring{--f:0;position:absolute;right:5px;bottom:5px;width:16px;height:16px;border-radius:50%;
+  background:conic-gradient(var(--amber) calc(var(--f) * 360deg), rgba(255,255,255,.16) 0);
+  box-shadow:0 0 0 1px rgba(0,0,0,.5);pointer-events:auto}
+.simring::after{content:'';position:absolute;inset:4px;border-radius:50%;background:#12100c}
+
+/* ---- D9 / audit 9.5 + C4: the subtract chips ---------------------------------
+   "one tap subtracts the junk categories from view. The chip IS the filter state
+   (no separate filter panel)." So an engaged chip reads as a subtraction that has
+   already happened -- struck through, with a '+' offering to put it back. */
+.zsbar{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px;padding:2px 0 9px}
+.zschip{font-family:var(--mo);font-size:11px;display:inline-flex;align-items:center;gap:6px;
+  background:transparent;border:1px solid var(--line);color:var(--mut);border-radius:13px;
+  padding:4px 10px;cursor:pointer;transition:background .12s,border-color .12s,color .12s}
+.zschip:hover{color:var(--ink);border-color:var(--amber)}
+.zschip .zsn{font-variant-numeric:tabular-nums;opacity:.75}
+.zschip.off{color:var(--ink);border-color:var(--amber);background:#241c12;text-decoration:line-through}
+.zschip.off .zsn{text-decoration:none}
+.zschip.none{opacity:.45}          /* nothing here to subtract */
+@media (prefers-reduced-motion:reduce){.zschip{transition:none}}
+
+/* on the paper slab, same reason as the shelves above */
+html.loupe-glass .zschip{border-color:rgba(26,18,7,.22);color:#6b5f4a}
+html.loupe-glass .zschip:hover{color:#241d15;border-color:#9c6512}
+html.loupe-glass .zschip.off{color:#241d15;border-color:#9c6512;background:rgba(26,18,7,.08)}
+
+/* ---- D7 / audit 9.3: cluster triage -------------------------------------------
+   "one cluster at a time -- 12 exemplar crops in a sheet, big 'same person?' prompt".
+   The queue is deliberately sparse: one question, twelve faces, and the three keys
+   named in the bar. The naming field stays hidden until K, so the default posture is
+   answering rather than typing. */
+#triageview{position:fixed;top:var(--gbar-h);left:0;right:0;bottom:0;z-index:48;
+  background:var(--bg);display:none;flex-direction:column;overflow-y:auto}
+#triageview.on{display:flex}
+.trbar{display:flex;gap:12px;align-items:center;padding:9px 14px;border-bottom:1px solid var(--line);
+  font-family:var(--mo);font-size:12px;color:var(--mut);position:sticky;top:0;
+  background:var(--bg);z-index:2}
+.trcount{font-variant-numeric:tabular-nums;color:var(--ink)}
+.trkeys{color:var(--mut)}
+.trclose{background:transparent;border:1px solid var(--line);color:var(--mut);border-radius:6px;
+  font-family:var(--mo);font-size:11px;padding:4px 9px;cursor:pointer}
+.trclose:hover{color:var(--ink);border-color:var(--amber)}
+.trbody{flex:1;display:flex;align-items:flex-start;justify-content:center;padding:26px 16px 60px}
+.trcard{width:min(760px,100%)}
+.trask{font-family:var(--hd);font-size:34px;font-weight:500;color:var(--ink);letter-spacing:-.01em}
+.trstat{font-family:var(--mo);font-size:12px;color:var(--mut);margin-top:6px;
+  font-variant-numeric:tabular-nums}
+/* twelve exemplars: four is enough to notice a face and not enough to judge whether a
+   cluster is ONE face, which is the entire question being asked */
+.trsheet{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:18px 0 16px}
+.trsheet img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:6px;
+  background:#0a0805;border:1px solid #2a2218;display:block}
+.trnamebox{display:none;position:relative;gap:8px;align-items:center}
+.trnamebox.on{display:flex}
+.trnamebox input{flex:1 1 auto;background:#221b13;border:1px solid var(--line);color:var(--ink);
+  font-family:var(--bd);font-size:15px;padding:9px 11px;border-radius:6px}
+.trnamebox input:focus{outline:none;border-color:var(--amber)}
+.trgo{font-family:var(--mo);font-size:12px;padding:9px 15px;border-radius:6px;cursor:pointer;
+  background:var(--amber);color:#160f06;border:1px solid var(--amber);font-weight:600}
+.trcancel{font-family:var(--mo);font-size:11.5px;padding:9px 12px;border-radius:6px;cursor:pointer;
+  background:transparent;color:var(--mut);border:1px solid var(--line)}
+.trcancel:hover{color:var(--ink);border-color:var(--amber)}
+.trsug{font-family:var(--mo);font-size:12px;color:var(--amber);margin-top:7px;font-variant-numeric:tabular-nums}
+.trloose{color:var(--mut);opacity:.8}
+.trerr{font-family:var(--mo);font-size:11.5px;color:var(--cut);margin-top:8px;min-height:1em}
+.trdone{font-family:var(--mo);font-size:13px;color:var(--mut);text-align:center;
+  display:grid;gap:12px;justify-items:center;padding-top:40px}
+.trdone b{font-family:var(--hd);font-size:22px;font-weight:500;color:var(--ink)}
+@media (max-width:700px){.trsheet{grid-template-columns:repeat(4,1fr)}.trask{font-size:26px}}
+
+/* ---- 9.8 long-press peek ---------------------------------------------------
+   The touch twin of a hover affordance: EXIF + marks, and no navigation. Inserted
+   BEFORE the touch branch on purpose so that branch stays last in the file. */
+.peek{position:fixed;z-index:80;display:grid;grid-template-columns:auto 1fr;gap:3px 10px;
+  font-family:var(--mo);font-size:11px;color:var(--ink);
+  background:var(--panel);border:1px solid var(--line);border-radius:9px;
+  padding:10px 12px;box-shadow:0 14px 34px rgba(0,0,0,.45);pointer-events:none}
+.peek .peekhd{grid-column:1/-1;color:var(--amber);letter-spacing:.06em;margin-bottom:2px}
+.peek .k{color:var(--mut)}
+/* A grid 1fr track will not shrink below its content's min-content width, and a long
+   originals/YYYY/MM/IMG_....JPG path has no break opportunity -- so the value column
+   pushed straight past the popover's own background until these two landed. */
+.peek span{min-width:0;overflow-wrap:anywhere}
+
+/* ---- mobile navigation: a bottom bar -----------------------------------------
+   The rail is right on a wide screen and wrong on a phone: the same ten buttons,
+   stacked into three labelled groups, filled the entire first screen and pushed
+   every photograph below the fold. A photo app whose first screen contains no
+   photographs has the wrong navigation.
+
+   The bar is cloned from those same buttons at runtime, so this file only has to
+   place them. Desktop never sees it. */
+:root{--tabbar-h:58px}
+#tabbar{display:none}
+#moresheet[hidden]{display:none}
+
+@media (max-width:700px){
+  /* the header keeps the wordmark and the stats; the rooms move to the bar */
+  header#top .hbtns{display:none}
+
+  #tabbar{
+    display:flex;position:fixed;left:0;right:0;bottom:0;z-index:60;
+    background:color-mix(in oklch, var(--panel) 92%, #000);
+    border-top:1px solid var(--line);
+    padding-bottom:env(safe-area-inset-bottom);   /* clears the home indicator */
+    backdrop-filter:blur(8px)}
+  .tabitem{
+    flex:1 1 0;min-width:0;min-height:var(--tabbar-h);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+    background:transparent;border:0;cursor:pointer;color:var(--mut);
+    font-family:var(--mo);font-size:10px;letter-spacing:.02em;padding:6px 2px;
+    -webkit-tap-highlight-color:transparent}
+  .tabitem .navico{width:22px;height:22px;flex:none}
+  .tabitem .tablbl{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .tabitem.on{color:var(--amber)}
+  .tabitem:active{background:#ffffff0d}
+
+  /* Fixed surfaces stop at the bar instead of running under it. Without this the
+     last row of every sheet sits behind the bar and cannot be tapped. */
+  #placesview,#tripsheet,#mapview,#peopleview,#persondetail,#vaultview,#nsfwview,
+  #cuttingview,#settingsview,#searchview,#triageview,#keysview{bottom:var(--tabbar-h)}
+  main{padding-bottom:calc(var(--tabbar-h) + 16px)}
+
+  /* Focus is the one immersive surface -- it is the photograph, full bleed, with its
+     own controls. A tab bar across it would cover the frame and invite a mis-tap on
+     the one screen where a mis-tap is a decision. */
+  body:has(#focus.on) #tabbar{display:none}
+
+  /* the More sheet */
+  #moresheet{position:fixed;inset:0;z-index:61;background:#000000a8;
+    display:flex;align-items:flex-end;opacity:0;transition:opacity .18s ease}
+  #moresheet.on{opacity:1}
+  .mssheet{width:100%;background:var(--panel);border-top:1px solid var(--line);
+    border-radius:14px 14px 0 0;padding:14px 14px calc(14px + env(safe-area-inset-bottom));
+    transform:translateY(12px);transition:transform .18s cubic-bezier(.2,.7,.3,1)}
+  #moresheet.on .mssheet{transform:none}
+  .mshead{display:flex;align-items:center;justify-content:space-between;
+    font-family:var(--mo);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--mut);padding:2px 2px 10px}
+  .msx{background:transparent;border:1px solid var(--line);color:var(--mut);
+    border-radius:6px;font-family:var(--mo);font-size:11px;padding:5px 10px;cursor:pointer}
+  .msgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .msitem{display:flex;align-items:center;gap:9px;min-height:52px;padding:10px 12px;
+    background:transparent;border:1px solid var(--line);border-radius:9px;cursor:pointer;
+    color:var(--ink);font-family:var(--mo);font-size:12px;text-align:left}
+  .msitem .navico{width:20px;height:20px;flex:none}
+  .msitem.on{border-color:var(--amber);color:var(--amber)}
+  @media (prefers-reduced-motion:reduce){
+    #moresheet,.mssheet{transition:none}
+  }
+}
+
+/* ---- D11 / audit 9.8: the touch branch --------------------------------------
+   "Targets >=44px" and "@media (hover: none) drives the swap, not UA sniffing."
+   There was no touch branch in this stylesheet at all. Measured on a 390x844 phone
+   viewport, 62 controls sat under the 44px floor: every nav button was 30px tall,
+   the year arrows 40px wide, the stats links 14px tall.
+
+   This block is APPENDED AT EOF deliberately. An earlier rail block placed near the
+   top lost to later base rules at equal specificity and slid content under itself
+   while looking half-right; source order is load-bearing in this file.
+
+   No UA sniffing is involved -- and none existed to remove; app.js never referenced
+   navigator.userAgent or maxTouchPoints. Coarse pointers get the bigger targets,
+   fine pointers keep the desk density unchanged. */
+@media (hover: none) and (pointer: coarse){
+
+  /* nav + strip buttons: 30px -> 44px via padding, so the glyph/label pair and its
+     inline-flex centering are untouched. */
+  .strip button, .hbtns button{min-height:44px;padding:11px 12px}
+
+  /* year arrows are thumb targets at the screen edge; 40px was under the floor and
+     they sit exactly where a hand grips. */
+  .yarrow{width:56px}
+
+  /* The stats links are 14px tall inline text. Vertical padding would reach 44px
+     without moving anything -- but at this line height the padded boxes of stacked
+     links would OVERLAP, so a thumb aimed at one row would land on its neighbour.
+     An overlapping 44px target is worse than an honest small one, so these take real
+     layout space instead and the stats box grows on phones. */
+  .strip .declink{display:inline-flex;align-items:center;min-height:44px;
+    white-space:nowrap;min-width:44px;gap:.34em}
+    /* gap, because inline-flex turns "cut" and its count into two flex items and flex
+       strips the whitespace between them -- without this the stats read "cut226" and
+       "kept21" on a phone while desktop still reads "cut 226". Only the screenshot
+       caught it; every target measurement was already passing. */
+  header#top .strip{row-gap:2px}
+
+  /* The focus deck is where couch culling actually happens, so its controls matter
+     most here -- and they are sized by their containers, not by .hbtns/.strip.
+     Scoped to the focus deck and the toolbar rather than to an enumerated list of
+     child containers: the first attempt named #fnav/#fviewbar/.fhead and missed both
+     the two <select>s (which are not buttons) and a button under #fnext. Measured at
+     32px tall before this. */
+  .toolbar button, .toolbar select, .toolbar .chip,
+  #focus button, #focus select{min-height:44px}
+  .toolbar .chip{padding:11px 13px}
+}
