@@ -1,0 +1,46 @@
+{
+  "": {
+    "dim": 1152,
+    "head": [
+      0.005867,
+      -0.001561,
+      0.026374,
+      0.024529
+    ],
+    "l2": 1.0,
+    "sha256": "0a9acb1582bfc8c69b3d4d453f494ada20e2761db97a35da18a4c89d4ad8cee5"
+  },
+  "a dog on a beach at sunset": {
+    "dim": 1152,
+    "head": [
+      0.045359,
+      0.01795,
+      -0.000579,
+      0.030167
+    ],
+    "l2": 1.0,
+    "sha256": "81a30649b3076babd988b39e80a88345df336fb022907a7db80aee8eb6d060a4"
+  },
+  "birthday cake with candles": {
+    "dim": 1152,
+    "head": [
+      0.023876,
+      0.016507,
+      -0.009086,
+      0.010214
+    ],
+    "l2": 1.0,
+    "sha256": "c9de0f62d3c9cc5cb64c6f4cf44b762cb36ae1dd17195b4f8bce675401e26abe"
+  },
+  "screenshot of a spreadsheet": {
+    "dim": 1152,
+    "head": [
+      -0.016197,
+      0.014188,
+      -0.00157,
+      0.003036
+    ],
+    "l2": 1.0,
+    "sha256": "cc9a6d86a323f5249e6550b7b6d5190625c315b979ce9bcb59ecc6f439083a15"
+  }
+}

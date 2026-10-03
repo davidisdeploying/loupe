@@ -1,0 +1,15 @@
+[Unit]
+Description=Loupe incremental SigLIP2 coverage refresh
+After=local-fs.target
+ConditionPathExists=%h/loupe/tools/semantic_refresh.py
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/loupe/tools
+Environment=PYTHONUNBUFFERED=1
+Environment=LOUPE_ONNX_PROVIDER=cpu
+Environment=LOUPE_SIGLIP_MODEL_DIR=%h/loupe-ml/embeddings/models/siglip2-so400m
+ExecStart=/data/loupe-venv/bin/python %h/loupe/tools/semantic_refresh.py
+Nice=10
+IOSchedulingClass=idle
+MemoryMax=4G

@@ -1,0 +1,14 @@
+[Unit]
+Description=Blind A/B aesthetic preference tool (standalone, experiment)
+# Relocated from Tensor with Loupe. It lives inside the Loupe repo at
+# ~/loupe/aesthetic and shares the CPU-native full Loupe environment.
+
+[Service]
+Type=simple
+ExecStart=/data/loupe-venv/bin/python %h/loupe/aesthetic/preftool/server.py
+WorkingDirectory=%h/loupe/aesthetic/preftool
+Restart=on-failure
+KillMode=control-group
+
+[Install]
+WantedBy=default.target

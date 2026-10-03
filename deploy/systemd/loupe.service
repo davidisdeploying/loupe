@@ -1,0 +1,30 @@
+[Unit]
+Description=loupe — full photo-cull app on Vector (:8000)
+# Vector owns the local databases and serves originals from Array. Large models,
+# ML workspaces, and ledger archives live on Array through compatibility paths.
+# The public origin reaches Vector over Tailscale at 100.64.0.25:8000.
+# The CPU-native venv supplies Loupe's full non-CUDA image/ML dependency set.
+# Survive transient crashes but stop flapping if it's hard-broken:
+StartLimitIntervalSec=300
+StartLimitBurst=10
+
+[Service]
+Type=simple
+WorkingDirectory=%h/loupe
+Environment=PYTHONUNBUFFERED=1
+Environment=DATA_ROOT=/data/loupe/state
+Environment=LOUPE_PIPELINE_DIR=%h/loupe/pipeline
+EnvironmentFile=-%h/loupe/secrets.env
+Environment=LIBRARY_ROOT=${STORAGE_ROOT}/photos
+Environment=LOUPE_REQUIRE_MOUNT=1
+ExecStartPre=/usr/bin/test -f ${STORAGE_ROOT}/photos/originals/.mounted
+ExecStartPre=/usr/bin/test -d %h/loupe-ml
+ExecStartPre=/usr/bin/test -d %h/loupe-archive
+ExecStart=/data/loupe-venv/bin/python %h/loupe/server.py
+Restart=always
+RestartSec=3
+StandardOutput=append:/data/loupe/state/logs/server.log
+StandardError=append:/data/loupe/state/logs/server.log
+
+[Install]
+WantedBy=default.target

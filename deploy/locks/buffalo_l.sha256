@@ -1,0 +1,18 @@
+# insightface buffalo_l — model provenance baseline (W12)
+#
+# The audit asked for a charlie<->delta hash diff. Delta no longer runs Loupe,
+# so there is no second side; these hashes are the baseline instead.
+#
+# LOADED copy: ~/loupe/.insightface (faces_pipeline.py MODEL_ROOT = HERE/.insightface).
+# /data/loupe-insightface/models/buffalo_l is an UNUSED duplicate left by the
+# 2026-08-07 host move. Verified byte-identical to the loaded copy on 2026-08-09.
+# Nothing sets INSIGHTFACE_HOME, so the duplicate is inert -- but it is a drift
+# risk: if one copy is ever updated, nothing detects the divergence.
+#
+# captured: 2026-08-09 06:39 UTC on charlie
+
+df5c06b8a0c12e422b2ed8947b8869faa4105387f199c477af038aa01f9a45cc  1k3d68.onnx
+f001b856447c413801ef5c42091ed0cd516fcd21f2d6b79635b1e733a7109dbf  2d106det.onnx
+5838f7fe053675b1c7a08b633df49e7af5495cee0493c7dcf6697200b85b5b91  det_10g.onnx
+4fde69b1c810857b88c64a335084f1c3fe8f01246c9a191b48c7bb756d6652fb  genderage.onnx
+4c06341c33c2ca1f86781dab0e829f88ad5b64be9fba56e56bc9ebdefc619e43  w600k_r50.onnx
