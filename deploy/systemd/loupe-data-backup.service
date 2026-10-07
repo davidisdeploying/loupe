@@ -1,0 +1,13 @@
+[Unit]
+Description=Verified Loupe snapshot with preserved Array history and bounded local retention
+[Service]
+Type=oneshot
+Environment=PYTHONDONTWRITEBYTECODE=1
+Environment=LOUPE_STATE_DIR=/data/loupe/state
+ExecStartPre=/usr/bin/python3 %h/loupe/deploy/verify_and_prune.py --root %h/FleetDatabaseBackups/vector-loupe-snapshots --mirror /mnt/array/loupe/database-backups/vector-loupe-snapshots --expected-source //192.0.2.3/Loupe --check-archive-mount
+ExecStart=/usr/bin/python3 %h/loupe/deploy/loupe_data_backup.py --root %h/FleetDatabaseBackups/vector-loupe-snapshots --keep-days 3 --loupe-only
+ExecStartPost=/usr/bin/mkdir -p /mnt/array/loupe/database-backups/vector-loupe-snapshots
+ExecStartPost=/usr/bin/rsync -a %h/FleetDatabaseBackups/vector-loupe-snapshots/ /mnt/array/loupe/database-backups/vector-loupe-snapshots/
+ExecStartPost=/usr/bin/python3 %h/loupe/deploy/verify_and_prune.py --root %h/FleetDatabaseBackups/vector-loupe-snapshots --mirror /mnt/array/loupe/database-backups/vector-loupe-snapshots --expected-source //192.0.2.3/Loupe --keep-days 3 --max-generations 2 --max-bytes 4294967296 --receipt %h/.local/state/fleet/loupe-retention/latest.json --apply
+TimeoutStartSec=1800
+NoNewPrivileges=true

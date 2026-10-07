@@ -1,0 +1,10 @@
+[Unit]
+Description=Daily Loupe semantic coverage refresh
+
+[Timer]
+OnCalendar=*-*-* 10:00:00 UTC
+RandomizedDelaySec=900
+Persistent=true
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,300 @@
+<!doctype html><html class="loupe-glass"><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Loupe — look · cull · loop</title>
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/static/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/static/icons/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/static/icons/apple-touch-icon.png">
+<link rel=preconnect href="https://fonts.googleapis.com">
+<link rel=preconnect href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Newsreader:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel=stylesheet>
+<link rel="manifest" href="/static/site.webmanifest">
+<meta name="theme-color" content="#15110d">
+<link rel="stylesheet" href="/static/app.css?v=__CSSVER__"></head><body>
+<header id=top>
+ <div class=hrow1><div class=brand><a class=logo onclick="showOverview()" title="loupe — overview"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 210 112" role="img" aria-label="Loupe"><rect x="14" y="72" width="182" height="22" rx="3" fill="#1B1610" stroke="#3A3024" stroke-width="1.2"/><rect x="57.65" y="72" width="36" height="22" fill="#BA7517" fill-opacity="0.24"/><rect x="57.65" y="72" width="36" height="22" fill="none" stroke="#BA7517" stroke-width="1.4" stroke-opacity="0.85"/><g stroke="#3A3024" stroke-width="1.2"><line x1="57.65" y1="72" x2="57.65" y2="94"/><line x1="93.65" y1="72" x2="93.65" y2="94"/><line x1="120" y1="72" x2="120" y2="94"/><line x1="156" y1="72" x2="156" y2="94"/></g><g fill="#5E5240"><rect x="20" y="74.5" width="6" height="3.2" rx="1"/><rect x="34" y="74.5" width="6" height="3.2" rx="1"/><rect x="48" y="74.5" width="6" height="3.2" rx="1"/><rect x="62" y="74.5" width="6" height="3.2" rx="1"/><rect x="76" y="74.5" width="6" height="3.2" rx="1"/><rect x="90" y="74.5" width="6" height="3.2" rx="1"/><rect x="104" y="74.5" width="6" height="3.2" rx="1"/><rect x="118" y="74.5" width="6" height="3.2" rx="1"/><rect x="132" y="74.5" width="6" height="3.2" rx="1"/><rect x="146" y="74.5" width="6" height="3.2" rx="1"/><rect x="160" y="74.5" width="6" height="3.2" rx="1"/><rect x="174" y="74.5" width="6" height="3.2" rx="1"/><rect x="188" y="74.5" width="6" height="3.2" rx="1"/><rect x="20" y="87.3" width="6" height="3.2" rx="1"/><rect x="34" y="87.3" width="6" height="3.2" rx="1"/><rect x="48" y="87.3" width="6" height="3.2" rx="1"/><rect x="62" y="87.3" width="6" height="3.2" rx="1"/><rect x="76" y="87.3" width="6" height="3.2" rx="1"/><rect x="90" y="87.3" width="6" height="3.2" rx="1"/><rect x="104" y="87.3" width="6" height="3.2" rx="1"/><rect x="118" y="87.3" width="6" height="3.2" rx="1"/><rect x="132" y="87.3" width="6" height="3.2" rx="1"/><rect x="146" y="87.3" width="6" height="3.2" rx="1"/><rect x="160" y="87.3" width="6" height="3.2" rx="1"/><rect x="174" y="87.3" width="6" height="3.2" rx="1"/><rect x="188" y="87.3" width="6" height="3.2" rx="1"/></g><path d="M64.65 60 L57.65 72 L93.65 72 L86.65 60 Z" fill="#E9E4D6" fill-opacity="0.07"/><line x1="64.65" y1="60" x2="57.65" y2="72" stroke="#EFE9DA" stroke-width="1.3" stroke-opacity="0.6"/><line x1="86.65" y1="60" x2="93.65" y2="72" stroke="#EFE9DA" stroke-width="1.3" stroke-opacity="0.6"/><text x="18" y="66" font-family="Fraunces,Georgia,serif" font-weight="500" font-size="62" fill="#E6E2D5">L</text><text x="96" y="66" font-family="Fraunces,Georgia,serif" font-weight="500" font-size="62" fill="#E6E2D5">upe</text><g><line x1="60.65" y1="46" x2="60.65" y2="56" stroke="#BA7517" stroke-width="5"/><line x1="90.65" y1="46" x2="90.65" y2="56" stroke="#BA7517" stroke-width="5"/><ellipse cx="75.65" cy="56" rx="15" ry="7" fill="none" stroke="#BA7517" stroke-width="5"/><ellipse cx="75.65" cy="46" rx="15" ry="7" fill="#14110C"/><ellipse cx="75.65" cy="46" rx="15" ry="7" fill="#BA7517" fill-opacity="0.14"/><ellipse cx="75.65" cy="46" rx="15" ry="7" fill="none" stroke="#BA7517" stroke-width="5"/><path d="M64.65 44 Q69.65 40 77.65 41.5" fill="none" stroke="#FBF6EA" stroke-width="2.2" stroke-opacity="0.72" stroke-linecap="round"/></g></svg></a><div class=brandtag>look · cull · loop</div></div><div class=hbtns>
+   <div class=navspace data-space=table role=group aria-label="Light table">
+    <span class=navspace-l aria-hidden=true>Light table</span>
+   <button id=overviewtog onclick="showOverview()" title="Overview — the whole library"><svg class=navico viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=1.7 stroke-linecap=round stroke-linejoin=round aria-hidden=true><rect x="3.5" y="3.5" width="17" height="17" rx="2"/><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><rect x="5.6" y="5.6" width="3.4" height="3.4" rx="0.6" fill="#E2902A" stroke="none"/></svg>Overview</button>
+   <button id=todaytog onclick="openToday()" title="On This Day — everything ever shot on today's date, every year at once"><svg class=navico viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=1.7 stroke-linecap=round stroke-linejoin=round aria-hidden=true><circle cx="12" cy="12" r="8.3"/><line x1="12" y1="7" x2="12" y2="12.3"/><line x1="12" y1="12.3" x2="15.4" y2="14.3"/><circle cx="12" cy="12" r="1" fill="#E2902A" stroke="none"/></svg>Today</button>
+   <button id=calendartog onclick="showCalendar()" title="Calendar — completion by calendar day, across every year"><svg class=navico viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=1.7 stroke-linecap=round stroke-linejoin=round aria-hidden=true><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><line x1="3.5" y1="9.6" x2="20.5" y2="9.6"/><line x1="7.4" y1="3.3" x2="7.4" y2="6.7"/><line x1="16.6" y1="3.3" x2="16.6" y2="6.7"/><rect x="14.6" y="13" width="3.4" height="3.4" rx="0.6" fill="#E2902A" stroke="none"/></svg>Calendar</button>
+   <button id=placestog onclick="showTrips()" title="Trips — journeys away from home"><svg class=navico viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=1.7 stroke-linecap=round stroke-linejoin=round aria-hidden=true><rect x="2.5" y="6" width="19" height="12" rx="1.5"/><line x1="5.5" y1="10" x2="12" y2="10"/><line x1="5.5" y1="13" x2="13" y2="13"/><line x1="5.5" y1="15.5" x2="10.5" y2="15.5"/><rect x="15.4" y="8.4" width="4.1" height="3.2" rx="0.6" fill="#E2902A" stroke="none"/></svg>Trips</button>
+   <button id=maptog onclick="showMap()" title="Map — the whole library by place"><svg class=navico viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=1.7 stroke-linecap=round stroke-linejoin=round aria-hidden=true><path d="M3 6.5 L9 4.8 L15 6.5 L21 4.8 V17.5 L15 19.2 L9 17.5 L3 19.2 Z"/><line x1="9" y1="4.8" x2="9" y2="17.5"/><line x1="15" y1="6.5" x2="15" y2="19.2"/><circle cx="12" cy="11" r="1.7" fill="#E2902A" stroke="none"/></svg>Map</button>
+   <button id=peopletog onclick="showPeople()" title="People — faces grouped by person"><svg class=navico viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=1.7 stroke-linecap=round stroke-linejoin=round aria-hidden=true><circle cx="9" cy="8.2" r="3.1"/><path d="M3.6 19 a5.4 5.4 0 0 1 10.8 0"/><circle cx="17" cy="7.6" r="2.3" fill="#E2902A" stroke="none"/><path d="M15.3 13.2 a4.4 4.4 0 0 1 5.1 4.3" opacity="0.9"/></svg>People</button>
+   <button id=searchtog onclick="showSearch()" title="Search — find frames by what's in them" style="display:none"><svg class=navico viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=1.7 stroke-linecap=round stroke-linejoin=round aria-hidden=true><circle cx="10.5" cy="10.5" r="6.3"/><line x1="15.2" y1="15.2" x2="20.5" y2="20.5"/><circle cx="13" cy="8" r="1.4" fill="#E2902A" stroke="none"/></svg>Search</button>
+   </div>
+   <div class=navspace data-space=loupe role=group aria-label="Loupe">
+    <span class=navspace-l aria-hidden=true>Loupe</span>
+   <button id=modetog onclick="showCuttingRoom()" title="The Cutting Room — everything the rules flagged for the cut"><svg class=navico viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=1.7 stroke-linecap=round stroke-linejoin=round aria-hidden=true><circle cx="6" cy="6.5" r="2.3"/><circle cx="6" cy="17.5" r="2.3"/><line x1="7.9" y1="7.8" x2="20" y2="16.5"/><line x1="7.9" y1="16.2" x2="20" y2="7.5"/><circle cx="11.6" cy="12" r="1" fill="#E2902A" stroke="none"/></svg>Cutting Room</button>
+   </div>
+   <div class=navspace data-space=darkroom role=group aria-label="Darkroom">
+    <span class=navspace-l aria-hidden=true>Darkroom</span>
+   <button id=vaulttog onclick="showVault()" title="Personal Vault" style="display:none"><svg class=navico viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=1.7 stroke-linecap=round stroke-linejoin=round aria-hidden=true><rect x="4.5" y="10.5" width="15" height="9.5" rx="2"/><path d="M7.5 10.5 V8 a4.5 4.5 0 0 1 9 0 V10.5"/><circle cx="12" cy="14.4" r="1.5" fill="#E2902A" stroke="none"/><line x1="12" y1="15.6" x2="12" y2="17.6"/></svg>Vault</button>
+   <button id=nsfwtog onclick="showNsfw()" title="Closed Set · on-device nudity review (owner only)" style="display:none"><svg class=navico viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=1.7 stroke-linecap=round stroke-linejoin=round aria-hidden=true><rect x="3.5" y="10" width="17" height="9.5" rx="1.5"/><path d="M4 9.8 L6.3 6.1 L20.6 8 L18.4 11.6"/><line x1="9.6" y1="6.6" x2="7.6" y2="10"/><line x1="14.2" y1="7.2" x2="12.2" y2="10.4"/><circle cx="12" cy="15.4" r="1" fill="#E2902A" stroke="none"/></svg>Closed Set</button>
+   <button id=settingstog onclick="showSettings()" title="Settings"><svg class=navico viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=1.7 stroke-linecap=round stroke-linejoin=round aria-hidden=true><circle cx="12" cy="12" r="3.1"/><path d="M12 3 V5.4 M12 18.6 V21 M3 12 H5.4 M18.6 12 H21 M5.6 5.6 L7.3 7.3 M16.7 16.7 L18.4 18.4 M18.4 5.6 L16.7 7.3 M7.3 16.7 L5.6 18.4"/><circle cx="12" cy="12" r="1.1" fill="#E2902A" stroke="none"/></svg>Settings</button>
+   <button id=setuptog style="display:none" onclick="location.href='/setup'" title="Darkroom console — ingest, stages, status"><svg class=navico viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=1.7 stroke-linecap=round stroke-linejoin=round aria-hidden=true><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><line x1="3.5" y1="9" x2="20.5" y2="9"/><line x1="7" y1="13" x2="13" y2="13"/><line x1="7" y1="16" x2="11" y2="16"/><circle cx="17" cy="14.5" r="1.5" fill="#E2902A" stroke="none"/></svg>Setup</button>
+   </div>
+   <button id=expcand onclick="exportCandidates()" style="display:none">⤓ export candidates</button>
+   </div><div class=strip><span id=strip></span></div></div>
+ <div class=hcrumb><div class=crumb id=crumb></div></div>
+</header>
+<main id=app></main>
+<div id=placesview>
+ <div class=plbar>
+   <span id=plcov class=plcov></span>
+   <span class=spacer></span>
+   <button class=plmaplink onclick="showMap()" title="See every place on the map">🗺 Open the map</button>
+ </div>
+ <div class=plmain>
+   <div id=plgallery></div>
+ </div>
+</div>
+<div id=mapview>
+ <div class=mapbar>
+   <span id=mapcov class=plcov></span>
+   <span class=spacer></span>
+   <a class=plmaplink onclick="showTrips()" title="The journeys, as postcards">⌖ Trips view</a>
+ </div>
+ <div class=mapmain>
+   <div id=lmap></div>
+   <div class=mappanel id=mappanel>
+     <div class=mpsec>
+       <div class=mphead>Layers</div>
+       <label class=mprow><input type=checkbox id=lyrPlaces checked disabled><span class=mpname>Places</span><i>always on</i></label>
+       <label class=mprow><input type=checkbox id=lyrTrips><span class=mpname>Trips</span><i>journeys</i></label>
+       <label class=mprow><input type=checkbox id=lyrHome><span class=mpname>Home areas</span><i id=lyrHomeHint>off · zones</i></label>
+     </div>
+     <div class=mpsec>
+       <div class=mphead>Time <span class=mphint id=scrublab>2002 – 2026</span></div>
+       <div class=scrub id=scrub>
+         <div class=scrubtrack><div class=scrubfill id=scrubfill></div></div>
+         <input type=range id=scrubA min=2002 max=2026 value=2002 step=1 aria-label="from year">
+         <input type=range id=scrubB min=2002 max=2026 value=2026 step=1 aria-label="to year">
+       </div>
+     </div>
+     <div class=mpsec id=mplegend>
+       <div class=mphead>Legend</div>
+       <div class=mpleg><span class="lgstack"><i></i><i></i><b></b></span>place · sized by count</div>
+       <div class=mpleg><span class="lgring"></span>ring · thicker = busier decile</div>
+       <div class=mpleg><span class="lgzone"></span>home area (this era)</div>
+       <div class=mpleg><span class="lgtrip"></span>trip path</div>
+     </div>
+   </div>
+   <div class=mapnote id=mapnote></div>
+   <div class=mapcard id=mapcard>
+     <button class=mcclose onclick="closeMapCard()" aria-label="close">✕</button>
+     <div class=mcmeta>
+       <div class=mceyebrow>A place you went</div>
+       <div class=mctitle id=mctitle></div>
+       <div class=mcsub id=mcsub></div>
+     </div>
+     <div class=mcthumbs id=mcthumbs></div>
+     <button class="amber mcopen" id=mcopen>Open the contact sheet →</button>
+   </div>
+ </div>
+</div>
+<div id=cuttingview>
+ <div class=crscroll>
+  <div class=crwrap>
+   <div class=crhead>
+     <div class=creyebrow>The Cutting Room</div>
+     <h1 class=crh1>Frames flagged for the cut. <em>Nothing's been cut yet.</em></h1>
+     <p class=crintro>Six rules read the whole library and set aside the frames most likely to go —
+       the soft, the duplicated, the screenshots, the stray clips, the junk imports. Nothing here
+       is gone; nothing's even been cut. This is just the pile to look through. Open any rule to
+       review its frames one at a time and decide, keep or cut — every choice reversible.</p>
+     <div class=crstats id=crstats></div>
+   </div>
+   <div class=crgrid id=crgrid></div>
+  </div>
+ </div>
+</div>
+<div id=calendarview>
+ <div class=crscroll>
+  <div class=crwrap>
+   <div class=crhead>
+     <div class=creyebrow>Calendar</div>
+     <h1 class=crh1>Every calendar day, <em>at a glance</em>.</h1>
+     <p class=crintro>One cell per day of the year, colored by how much of everything you've ever
+       shot on that date has been reviewed — across every year at once. Tap a day to open its
+       cross-year review queue.</p>
+     <div class=crstats id=calstats></div>
+   </div>
+   <div class=calgrid id=calgrid></div>
+  </div>
+ </div>
+</div>
+<div id=tripsheet>
+ <div class=tsbar>
+   <button class=plback onclick="showTrips()" title="Back to Trips">‹ Trips</button>
+   <span class=spacer></span>
+   <button id=tsmap class=plback onclick="if(SHEET)showMap({trip:SHEET.i})" title="See this trip on the map">🗺 view on map</button>
+   <button id=tsreview class=amber>Review all →</button>
+ </div>
+ <div id=tsmast class=tsmast></div>
+ <div id=tssheet class=tssheet></div>
+</div>
+<div id=tloupe><div id=tloupechip></div></div>
+<div id=settingsview>
+ <div class=setmain>
+   <nav class=setnav>
+     <a class="setnav-i on" id=nav-residences>Residences</a>
+     <a class="setnav-i" id=nav-nsfw style="display:none">Closed Set</a>
+     <a class="setnav-i dis">Culling rules<i>soon</i></a>
+     <a class="setnav-i dis">Display<i>soon</i></a>
+     <a class="setnav-i dis">Backup &amp; export<i>soon</i></a>
+   </nav>
+   <div class=setcontent id=setcontent></div>
+ </div>
+</div>
+<div id=resmodal><div class=resform id=resform></div></div>
+<div id=vaultview>
+ <div class=setbar><span id=vaultcount class=plcov></span>
+   <span class=spacer></span><span class=plcov style="font-size:11px">personal · hidden everywhere · never exported/deleted</span></div>
+ <div id=vaultgrid class="grid vgrid"></div>
+</div>
+<div id=searchview>
+ <div class=setbar>
+   <input type=text id=searchq placeholder="search your library…" autocomplete=off>
+   <span class=spacer></span>
+   <label id=searchall style="display:none"><input type=checkbox id=searchallcb> everything</label>
+   <span id=searchstatus class=plcov></span>
+ </div>
+ <div class="grid" id=searchgrid></div>
+</div>
+<div id=nsfwview>
+ <div class=nsfwtabs>
+   <button class="nsfwtab on" data-facet=nudity onclick="showNsfw('nudity')">Nudity screen</button>
+   <button class=nsfwtab data-facet=production onclick="showNsfw('production')">Production</button>
+ </div>
+ <div class=setbar><span id=nsfwcount class=plcov></span>
+   <span class=spacer></span><span id=nsfwsubnote class=plcov style="font-size:11px">on-device · owner-only · never shown to shared viewers · never deleted</span></div>
+ <div class=nsfwctl id=nsfwctl>
+   <span class=nsfwthrlbl>Flag at score ≥ <b id=nsfwthrval>0.50</b></span>
+   <input id=nsfwthr type=range min=0 max=1 step=0.01 value=0.5
+          oninput="document.getElementById('nsfwthrval').textContent=Number(this.value).toFixed(2)"
+          onchange="nsfwSetThreshold(this.value)">
+   <span id=nsfwsummary class=nsfwsummary></span>
+ </div>
+ <div id=nsfwstage>
+   <div id=nsfwgrid class="grid vgrid"></div>
+   <div id=nsfwgate>
+     <div class=nsfwgatecard>
+       <div class=nsfwgatetitle>Closed Set</div>
+       <p class=nsfwgatebody>These are the frames the on-device screen set aside as possibly containing nudity — owner-only, never shown to shared viewers, never deleted. The set includes false positives: innocent beach, bath, and family shots. Reveal them to review, and clear anything that shouldn't be here.</p>
+       <div class=nsfwgatebtns>
+         <button class=nsfwgatereveal onclick="revealNsfw()">Reveal for review</button>
+         <button class=nsfwgateback onclick="showOverview()">Back</button>
+       </div>
+     </div>
+   </div>
+ </div>
+</div>
+<div id=peopleview>
+ <div class=setbar><span id=peoplecount class=plcov></span>
+   <span class=spacer></span><span class=plcov style="font-size:11px">faces detected by insightface · names Apple-seeded or given below</span></div>
+ <div id=peoplebody>
+ <div id=namebox style="display:none">
+   <div class=pdhdr>People to name <span id=nbmeta class=plcov></span><i>recurring unnamed faces, clustered on-box · naming builds the local anchors</i></div>
+   <div id=nbctl class=pdsugctl></div>
+   <div id=nbgrid class=nbgrid></div>
+ </div>
+ <div id=peoplegrid class="grid pplgrid"></div>
+ <div id=persondetail>
+   <div class=setbar style="margin-top:4px"><button class=plback onclick="showPeople()" title="Back to People">‹ People</button>
+     <span class=pltitle id=pdname></span><span id=pdcount class=plcov></span></div>
+   <div class=pdsection>
+     <div class=pdhdr>Known faces <span id=pdknowncount class=plcov></span><i>Apple-tagged anchors used as similarity seeds</i></div>
+     <div id=pdknown class="grid facegrid"></div>
+   </div>
+   <div class=pdsection>
+     <div class=pdhdr>Find more faces <span id=pdsugmeta class=plcov></span><i>ranked by cosine similarity · confirm to gather, reject to dismiss</i></div>
+     <div id=pdsugctl class=pdsugctl></div>
+     <div id=pdsug class="grid facegrid"></div>
+   </div>
+ </div>
+ </div>
+</div>
+<div id=focus class=focus>
+ <div class=fhead><span id=fhpos></span><span class=spacer></span><span id=fhstate></span>
+   <button id=sigtog class=sigtog onclick="toggleSig()">signals</button>
+   <button onclick="exitFocus()">✕ close</button></div>
+ <div class=fbody id=fbody>
+   <div id=fnav><button id=fback onclick="focusPrev()">‹ previous</button></div>
+   <div id=fnext><button onclick="focusNext()">next ›</button></div>
+   <div id=fviewbar><button id=flive onclick="playLive()" style="display:none" title="play the bound Live Photo motion clip">◉ Live</button><button id=fedited onclick="toggleEdited()" style="display:none" title="Toggle Edited vs Original Render">🎨 edited</button><button id=ffull onclick="focusFull()">▶ full</button></div>
+   <div class=stage id=fstage></div>
+   <div class=meta id=fmeta></div>
+ </div>
+ <div class=acts>
+   <button class=bcut onclick="focusFlash('cut');focusDecide('cut')">✕ cut</button>
+   <button class=bkeep onclick="focusFlash('keep');focusDecide('keep')">✓ keep</button>
+   <button id=fvault class=bvault onclick="focusVault()" title="Vault — mark personal/private (key: V)">🔒 vault</button></div>
+</div>
+<div id=toast></div>
+<div id=exportgate>
+ <div class=gatebox role=dialog aria-modal=true aria-label="Prepare export">
+  <div class=gatehead>Preparing frames for deletion</div>
+  <div id=gatebody class=gatebody></div>
+  <div class=gatefoot>
+   <label for=gatetype id=gatetypelabel>Type the count to unlock</label>
+   <input id=gatetype type=text inputmode=numeric autocomplete=off spellcheck=false>
+   <button id=gatecancel type=button>cancel</button>
+   <button id=gatego type=button disabled>write manifest</button>
+  </div>
+ </div>
+</div>
+<div id=paletteview>
+ <div class=palbox role=dialog aria-modal=true aria-label="Command palette">
+  <input id=palq type=text autocomplete=off spellcheck=false placeholder="go to a view, a year, a month…">
+  <div id=palresults class=palresults role=listbox></div>
+  <div class=palfoot><span><kbd>&uarr;</kbd><kbd>&darr;</kbd> move</span><span><kbd>&crarr;</kbd> go</span><span><kbd>Esc</kbd> close</span></div>
+ </div>
+</div>
+<!-- D7 / audit 9.3: cluster triage. One cluster at a time, the same K/X/-> muscle
+     memory as photo culling, because the app has one gesture language. -->
+<div id=triageview>
+ <div class=trbar>
+   <span class=trcount id=trcount></span>
+   <span class=spacer></span>
+   <span class=trkeys id=trkeys>K same person &middot; X not a person &middot; &rarr; skip &middot; Esc leave</span>
+   <button class=trclose onclick="closeTriage()" aria-label="Leave triage">esc</button>
+ </div>
+ <div class=trbody id=trbody></div>
+</div>
+<!-- Mobile navigation. Built at runtime by cloning the header's nav buttons, so the
+     icons, the labels and the owner/guest gating all keep living in one place. -->
+<nav id=tabbar aria-label="Sections"></nav>
+<div id=moresheet hidden>
+  <div class=mssheet role=dialog aria-modal=true aria-label="More">
+    <div class=mshead><span>More</span><button class=msx onclick="closeMore()" aria-label="Close">esc</button></div>
+    <div class=msgrid id=msgrid></div>
+  </div>
+</div>
+<div id=keysview>
+ <div class=keysbox role=dialog aria-modal=true aria-label="Keyboard shortcuts">
+  <div class=keyshead><span class=keystitle>Keyboard</span><button class=keysx onclick="closeKeys()" title="close" aria-label="Close">esc</button></div>
+  <div class=keysgrid>
+   <span class=keysec>Anywhere</span>
+   <dl><dt><kbd>/</kbd></dt><dd>command palette &mdash; go anywhere</dd></dl>
+   <dl><dt><kbd>?</kbd></dt><dd>this list</dd></dl>
+   <dl><dt><kbd>Esc</kbd></dt><dd>up one level &mdash; closes the topmost overlay</dd></dl>
+   <dl><dt><kbd>[</kbd><kbd>]</kbd></dt><dd>density &mdash; tighter / looser sheet</dd></dl>
+   <span class=keysec>The loupe &mdash; focus mode</span>
+   <dl><dt><kbd>K</kbd></dt><dd>keep</dd></dl>
+   <dl><dt><kbd>X</kbd></dt><dd>cut</dd></dl>
+   <dl><dt><kbd>U</kbd></dt><dd>undo &mdash; put the last decision back</dd></dl>
+   <dl><dt><kbd>V</kbd></dt><dd>vault <span class=keysown>owner</span></dd></dl>
+   <dl><dt><kbd>S</kbd></dt><dd>more like this &mdash; frames nearest this one</dd></dl>
+   <dl><dt><kbd>Space</kbd></dt><dd>zoom to pixel &mdash; sharpness is the cull decision</dd></dl>
+   <dl><dt><kbd>I</kbd></dt><dd>EXIF drawer &mdash; show / hide the signals panel</dd></dl>
+   <dl><dt><kbd>&larr;</kbd><kbd>&rarr;</kbd></dt><dd>previous / next frame</dd></dl>
+   <dl><dt><kbd>Esc</kbd></dt><dd>leave focus</dd></dl>
+  </div>
+  <p class=keysnote>Marks sit <em>on</em> the photograph, never in it &mdash; a decision is an overlay, the negative underneath is untouched.</p>
+ </div>
+</div>
+<script>
+window.LOCAL_FULLRES=__LOCAL__;
+window.SEARCH_ENABLED=__SEARCH__;</script>
+<script src="/static/app.js?v=__JSVER__"></script></body></html>

@@ -1,0 +1,13 @@
+{
+  "N": 45737,
+  "total_embeddings": 61970,
+  "total_apple_scores_nonnull": 77684,
+  "embedding_norm_mean": 1.0,
+  "embedding_norm_median": 1.0,
+  "y_min": 0.0,
+  "y_max": 1.0,
+  "y_mean": 0.3730739951133728,
+  "y_std": 0.19405311346054077,
+  "count_y_ge_0.6": 4849,
+  "count_y_le_0.25": 11499
+}
